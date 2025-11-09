@@ -1,8 +1,11 @@
-
+import React from "react";
+import { Navbar } from "@/components/landing/navbar";
 
 export default function Homepage() {
 
     return(
-        <div>Halo ini homepage</div>
-    )
+        <div>
+            <Navbar />
+        </div>
+    );
 }

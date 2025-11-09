@@ -2,6 +2,21 @@
 
 @custom-variant dark (&:is(.dark *));
 
+@layer utilities {
+  .slide-in-from-right {
+    transform: translateX(100%);
+  }
+  .animate-in {
+    animation: slideIn 0.4s ease forwards;
+  }
+
+  @keyframes slideIn {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+}
+
+
 @theme {
   --font-*: initial;
   --font-outfit: Outfit, sans-serif;
