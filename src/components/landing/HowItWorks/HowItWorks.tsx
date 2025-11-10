@@ -11,36 +11,31 @@ import { PlusIcon } from "lucide-react";
 
 const faq = [
     {
-        question: "Bagaimana cara meminjam buku di platform ini?",
-        answer:
-            "Cukup daftar akun gratis, lalu pilih buku yang ingin kamu pinjam. Setelah itu, tekan tombol 'Pinjam Buku' dan buku akan langsung masuk ke daftar bacaanmu.",
+        question: "Bagaimana cara pinjam buku?",
+        answer: "Daftar akun, pilih buku, klik 'Pinjam Buku', dan buku akan masuk daftar bacaanmu.",
     },
     {
-        question: "Apakah saya perlu datang langsung ke perpustakaan?",
-        answer:
-            "Tidak perlu! Kamu bisa membaca buku secara digital langsung dari platform ini. Tapi kalau ingin meminjam versi fisik, beberapa buku juga tersedia untuk diambil di perpustakaan terdekat.",
+        question: "Perlu datang ke perpustakaan?",
+        answer: "Tidak perlu. Kamu bisa baca digital. Untuk fisik, bisa ambil di perpustakaan terdekat.",
     },
     {
-        question: "Berapa lama masa peminjaman buku?",
-        answer:
-            "Setiap buku memiliki masa peminjaman standar selama 7 hingga 14 hari. Kamu bisa memperpanjang masa pinjam selama buku belum dipesan pengguna lain.",
+        question: "Berapa lama masa pinjam?",
+        answer: "Standar 7–14 hari. Bisa diperpanjang jika buku belum dipesan orang lain.",
     },
     {
-        question: "Apakah peminjaman buku berbayar?",
-        answer:
-            "Tidak, semua peminjaman buku bersifat gratis untuk anggota terdaftar. Namun, beberapa koleksi premium mungkin membutuhkan akses khusus dari admin.",
+        question: "Apakah peminjaman gratis?",
+        answer: "Ya, semua peminjaman gratis untuk anggota terdaftar. Koleksi premium mungkin memerlukan izin admin.",
     },
     {
-        question: "Bagaimana jika buku yang ingin saya pinjam sedang dipinjam orang lain?",
-        answer:
-            "Kamu bisa menekan tombol 'Masuk Daftar Tunggu'. Begitu buku tersebut dikembalikan, kamu akan langsung mendapat notifikasi melalui email atau dashboard.",
+        question: "Bagaimana jika buku sedang dipinjam?",
+        answer: "Tekan 'Masuk Daftar Tunggu'. Kamu akan diberi notifikasi saat buku tersedia.",
     },
     {
-        question: "Apakah saya bisa mengembalikan buku sebelum waktunya?",
-        answer:
-            "Tentu saja! Kamu bisa mengembalikan buku kapan saja melalui halaman 'Buku Saya'. Setelah dikembalikan, buku akan langsung tersedia untuk pengguna lain.",
+        question: "Bisa mengembalikan lebih cepat?",
+        answer: "Tentu, kembalikan kapan saja lewat halaman 'Buku Saya'. Buku langsung tersedia untuk pengguna lain.",
     },
 ];
+
 
 const FAQ = () => {
     return (
@@ -49,7 +44,7 @@ const FAQ = () => {
             className="w-full max-w-(--breakpoint-xl) mx-auto py-8 xs:py-16 px-6"
         >
             <h2 className="md:text-center text-3xl xs:text-4xl md:text-5xl leading-[1.15]! font-bold tracking-tighter">
-                Cara Meminjam Buku
+                FAQ
             </h2>
             <p className="mt-1.5 md:text-center xs:text-lg text-[hsl(0_0%_45.1%)]">
                 Panduan singkat agar kamu bisa mulai membaca dengan mudah.
