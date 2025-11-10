@@ -198,14 +198,28 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
   }
+
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+
+  :root {
+    --background: hsl(0 0% 97%);
+    --foreground: hsl(0 0% 3.9%);
+  }
+
+  .dark {
+    --background: hsl(0 0% 3.9%);
+    --foreground: hsl(0 0% 98%);
+  }
+
   body {
-    @apply relative font-normal font-outfit z-1 bg-gray-50;
+    @apply relative font-normal font-outfit z-1 text-[var(--foreground)] bg-[hsl(0_0%_97%)];
   }
 }
+
+
 
 @utility menu-item {
   @apply relative flex items-center w-full gap-3 px-3 py-2 font-medium rounded-lg text-theme-sm;

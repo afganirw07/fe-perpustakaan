@@ -1,24 +1,27 @@
+"use client";
+
 import * as React from "react";
 import { Slot as SlotPrimitive } from "radix-ui";
 import { cva, type VariantProps } from "class-variance-authority";
-
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+    "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-[hsl(0_0%_3.9%)] disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
     {
         variants: {
             variant: {
                 default:
-                    "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
+                    "bg-[hsl(0_0%_9%)] text-[hsl(0_0%_98%)] shadow-sm hover:bg-[hsl(0_0%_14.9%)]",
                 destructive:
-                    "bg-destructive text-destructive-foreground shadow-xs hover:bg-destructive/90",
+                    "bg-[hsl(0_84.2%_60.2%)] text-[hsl(0_0%_98%)] shadow-xs hover:bg-[hsl(0_84.2%_55%)]",
                 outline:
-                    "border border-input bg-background hover:bg-accent hover:text-accent-foreground",
+                    "border border-[hsl(0_0%_89.8%)] bg-[hsl(0_0%_96.1%)] text-[hsl(0_0%_9%)] hover:bg-[hsl(0_0%_45.1%)] hover:text-[hsl(0_0%_98%)]",
                 secondary:
-                    "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
-                ghost: "hover:bg-accent hover:text-accent-foreground",
-                link: "text-primary underline-offset-4 hover:underline",
+                    "bg-[hsl(0_0%_96.1%)] text-[hsl(0_0%_9%)] shadow-xs hover:bg-[hsl(0_0%_89.8%)]",
+                ghost:
+                    "text-[hsl(0_0%_9%)] hover:bg-[hsl(0_0%_96.1%)] hover:text-[hsl(0_0%_3.9%)]",
+                link:
+                    "text-[hsl(0_0%_9%)] underline-offset-4 hover:underline",
             },
             size: {
                 default: "h-9 px-4 py-2",
@@ -55,3 +58,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = "Button";
 
 export { Button, buttonVariants };
+    

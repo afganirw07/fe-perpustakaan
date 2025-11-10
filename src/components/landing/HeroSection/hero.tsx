@@ -38,7 +38,7 @@ const HeroSection = () => {
                             />
                             <Button
                                 size="lg"
-                                className="h-14 w-14 rounded-r-xl rounded-l-none flex-shrink-0 bg-primary hover:bg-primary/90"
+                                className="h-14 w-14 rounded-r-xl rounded-l-none flex-shrink-0 bg-primary hover:bg-primary/90 !text-black"
                             >
                                 <Search className="h-5 w-5" />
                             </Button>
@@ -66,7 +66,7 @@ const HeroSection = () => {
                 </div>
 
                 {/* Kolom Kanan: Gambar */}
-                <div className="relative lg:max-w-lg xl:max-w-xl w-full bg-accent rounded-xl aspect-square shadow-xl">
+                <div className="relative lg:max-w-lg xl:max-w-xl w-full bg-[hsl(0_0%_14.9%)] rounded-xl aspect-square shadow-xl">
                     <Image
                         src="/images/landing/hero.png"
                         fill
