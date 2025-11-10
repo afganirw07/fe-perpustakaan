@@ -35,12 +35,12 @@ const categories = [
     {
         title: "Sastra Indonesia",
         description: "Karya sastra lokal penuh makna dari penulis legendaris hingga modern.",
-        image: "/images/categories/sastra.jpg",
+        image: "/images/Books/sastra.png",
     },
     {
         title: "Anak & Remaja",
         description: "Cerita edukatif dan imajinatif untuk generasi muda yang gemar membaca.",
-        image: "/images/categories/anak.jpg",
+        image: "/images/Books/anak.png",
     },
 ];
 
@@ -63,7 +63,7 @@ const BooksPopular = () => {
                 {categories.map((cat) => (
                     <Card
                         key={cat.title}
-                        className="group overflow-hidden border rounded-2xl shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300"
+                        className="group overflow-hidden border rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
                     >
                         <div className="relative h-48 w-full overflow-hidden">
                             <Image

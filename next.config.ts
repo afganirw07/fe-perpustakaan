@@ -3,6 +3,7 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
+      // Domain yang sudah ada
       {
         protocol: "https",
         hostname: "randomuser.me",
@@ -42,6 +43,26 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "img.freepik.com",
+        port: "",
+        pathname: "/**",
+      },
+
+      // 🔥 Tambahan baru agar semua gambar buku kamu bisa muncul
+      {
+        protocol: "https",
+        hostname: "blogger.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "i0.wp.com",
+        port: "",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "miro.medium.com",
         port: "",
         pathname: "/**",
       },

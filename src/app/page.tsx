@@ -6,6 +6,7 @@ import Footer from "@/components/landing/footer/footer";
 import FAQ from "@/components/landing/HowItWorks/HowItWorks";
 import CTASection from "@/components/landing/CtaSection/CtaSection";
 import BooksPopular from "@/components/landing/BukuPopuler/BooksPopular";
+import FeaturedBooks from "@/components/landing/FeaturedBooks/FeaturedBooks";
 
 export default function Homepage() {
 
@@ -14,6 +15,7 @@ export default function Homepage() {
             <Navbar />
             <HeroSection />
             <BooksPopular />
+            <FeaturedBooks />
             <FAQ />
             <Testimonial />
             <CTASection />
