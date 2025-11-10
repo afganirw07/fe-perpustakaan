@@ -117,7 +117,7 @@ const Footer = () => {
             <Separator className="bg-[#1B263B]" />
 
             <div className="max-w-7xl mx-auto py-8 flex flex-col-reverse sm:flex-row items-center justify-between gap-x-2 gap-y-5 px-6">
-                <span className="text-[#A8B2C1] text-center xs:text-start text-sm">
+                <span className="text-[#A8B2C1] text-center text-sm">
                     &copy; {new Date().getFullYear()}{" "}
                     <Link
                         href="#"
