@@ -5,6 +5,7 @@ import Testimonial from "@/components/landing//testi/testimonial";
 import Footer from "@/components/landing/footer/footer";
 import FAQ from "@/components/landing/HowItWorks/HowItWorks";
 import CTASection from "@/components/landing/CtaSection/CtaSection";
+import BooksPopular from "@/components/landing/BukuPopuler/BooksPopular";
 
 export default function Homepage() {
 
@@ -12,6 +13,7 @@ export default function Homepage() {
         <div>
             <Navbar />
             <HeroSection />
+            <BooksPopular />
             <FAQ />
             <Testimonial />
             <CTASection />
