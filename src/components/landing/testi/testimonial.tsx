@@ -52,10 +52,10 @@ const testimonials = [
     {
         id: 5,
         name: "Siti Aisyah",
-        designation: "Ibu Rumah Tangga & Pembaca Aktif",
+        designation: "Mahasiswi Pembaca Aktif",
         company: "Komunitas Pembaca Cerdas",
         testimonial:
-            "Anak-anak saya sangat antusias dengan program dongeng interaktif di sini. Selain itu, saya pribadi suka dengan koleksi novel klasiknya yang selalu terawat.",
+            "Saya sangat antusias dengan program dongeng interaktif di sini. Selain itu, saya pribadi suka dengan koleksi novel klasiknya yang selalu terawat.",
         avatar: "https://hypeabis.id/assets/content/202407130738041720831084.jpg",
     },
     {
