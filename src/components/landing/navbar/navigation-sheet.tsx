@@ -9,8 +9,14 @@ import { VisuallyHidden as VisuallyHiddenPrimitive } from "radix-ui";
 import { Menu } from "lucide-react";
 import { Logo } from "./logo";
 import { NavMenu } from "./nav-menu";
+import { useRouter } from "next/navigation";
     
 export const NavigationSheet = () => {
+  const router = useRouter();
+  const toLogin = () => {
+    router.push("/login");
+  }
+
   return (
     <Sheet>
       <VisuallyHiddenPrimitive.Root>
@@ -26,7 +32,7 @@ export const NavigationSheet = () => {
         <NavMenu orientation="vertical" className="mt-12" />
 
         <div className="mt-8 space-y-4 ">
-          <Button variant="outline" className="w-full bg-[#171717] text-white sm:hidden">
+          <Button onClick={toLogin} variant="outline" className="w-full bg-[#171717] text-white sm:hidden">
             Masuk
           </Button>
         </div>
