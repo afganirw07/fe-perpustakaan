@@ -70,7 +70,7 @@ const FeaturedBooks = () => {
                                     {book.rating}
                                 </span>
                             </div>
-                            <Button size="">
+                            <Button size="default">
                                 <BookOpenIcon className="h-4 w-4 mr-2" />
                                 Pinjam
                             </Button>
