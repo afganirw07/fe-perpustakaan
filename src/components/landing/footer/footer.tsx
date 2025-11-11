@@ -1,8 +1,6 @@
 import { Separator } from "@/components/ui/seperator/seperator";
 import {
     DribbbleIcon,
-    GithubIcon,
-    TwitchIcon,
     TwitterIcon,
     Facebook,
     Instagram,
@@ -68,10 +66,9 @@ const Footer = () => {
                     <Image src="/images/logo/perpus.png" alt="Logo" width={160} height={32} />
 
                     <p className="mt-4 text-[#C5C6C7]">
-                        Pusat literasi digital terlengkap di Indonesia. Akses ribuan koleksi,
-                        program edukasi, dan layanan peminjaman modern.
+                        Temukan dunia literasi di Perpustakaan Nasional! Koleksi lengkap, program edukatif, dan layanan peminjaman digital siap mendukung eksplorasi Anda.
                     </p>
-                    
+
                     {/* Blok Kontak dan Sosial Media di Bawah Deskripsi (khusus layout XL) */}
                     <div className="mt-6 flex flex-col gap-4">
                         <div className="flex items-center gap-3 text-sm text-[#C5C6C7]">
@@ -89,7 +86,7 @@ const Footer = () => {
                                 <Instagram className="h-5 w-5" />
                             </Link>
                             <Link href="#" target="_blank" aria-label="Youtube" className="hover:text-[#F1FAEE]">
-                                <DribbbleIcon className="h-5 w-5" /> 
+                                <DribbbleIcon className="h-5 w-5" />
                             </Link>
                         </div>
                     </div>
@@ -124,11 +121,11 @@ const Footer = () => {
                         target="_blank"
                         className="text-[#F1FAEE] hover:underline"
                     >
-                        Pusat Literasi Digital Nasional
+                        Perpustukaan Nasional Republik Indonesia
                     </Link>
                     . Seluruh hak cipta dilindungi.
                 </span>
-                
+
                 <div className="hidden sm:block">
                 </div>
 

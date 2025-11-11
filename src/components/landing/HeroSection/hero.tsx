@@ -19,7 +19,7 @@ const HeroSection = () => {
                     </div>
 
                     <h1 className="mt-6 max-w-[20ch] text-3xl xs:text-4xl sm:text-5xl lg:text-[2.75rem] xl:text-5xl font-bold leading-[1.2]! tracking-tight">
-                        Jelajahi Ilmu, Berkreasi, dan Berkarya di Pusat Literasi Digital Nasional
+                        Jelajahi Ilmu, Berkreasi, dan Berkarya di Pusat Literasi     Nasional
                     </h1>
 
                     <p className="mt-6 max-w-[60ch] xs:text-lg text-gray-600">

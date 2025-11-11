@@ -19,7 +19,7 @@ const testimonials = [
         designation: "Mahasiswi Sastra",
         company: "Universitas Bina Karya",
         testimonial:
-            "Akses ribuan e-book dan jurnal di sini sangat membantu riset skripsi saya. Koleksinya lengkap dan mudah dicari, serasa perpustakaan dunia ada di genggaman!",
+            "Akses ribuan buku dan jurnal di sini sangat membantu riset skripsi saya. Koleksinya lengkap dan mudah dicari, serasa perpustakaan dunia ada di genggaman!",
         avatar: "https://sastraindonesia.fib.undip.ac.id/wp-content/uploads/2022/12/IMG-20221205-WA0008-960x675.jpg",
     },
     {
@@ -64,7 +64,7 @@ const testimonials = [
         designation: "Wirausaha Muda",
         company: "Startup EduTech",
         testimonial:
-            "Saya menemukan banyak referensi bisnis terbaru dan panduan pengembangan diri dari koleksi digital mereka. Sangat relevan dan menjadi sumber inspirasi utama saya.",
+            "Saya menemukan banyak referensi bisnis terbaru dan panduan pengembangan diri dari koleksi buku mereka. Sangat relevan dan menjadi sumber inspirasi utama saya.",
         avatar: "https://img.freepik.com/foto-premium/mahasiswa-asia-muda-membawa-buku-dan-ransel-dengan-gembira-merayakan-kesuksesan-dengan-mengangkat-tangan-terisolasi-di-atas-latar-belakang-biru_861453-76.jpg",
     },
 ];
