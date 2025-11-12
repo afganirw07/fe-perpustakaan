@@ -18,7 +18,7 @@ const CTASection = () => {
                 </p>
 
                 <div className="flex justify-center">
-                    <Link href="/daftar">
+                    <Link href="/register">
                         <Button
                             size="lg"
                             className="rounded-full bg-gray-900 text-white font-semibold hover:bg-gray-800 transition-colors group"

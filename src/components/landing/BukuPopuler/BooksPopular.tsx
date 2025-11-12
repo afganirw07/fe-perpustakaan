@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/card/card";
 
 import { Button } from "@/components/ui/button/Navbutton";
+import Link from "next/link";
 
 const categories = [
     {
@@ -82,9 +83,11 @@ const BooksPopular = () => {
                             <CardDescription>{cat.description}</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <Button className="mt-2">
-                                Lihat Buku
-                            </Button>
+                            <Link href='/register'>
+                                <Button className="mt-2">
+                                    Lihat Buku
+                                </Button>
+                            </Link>
                         </CardContent>
                     </Card>
                 ))}

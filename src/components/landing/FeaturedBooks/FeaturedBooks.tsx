@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card/card";
 import { StarIcon, BookOpenIcon } from "lucide-react";
 import {Button} from "@/components/ui/button/Navbutton";
+import Link from "next/link";
 
 const featuredBooks = [
     {
@@ -70,10 +71,12 @@ const FeaturedBooks = () => {
                                     {book.rating}
                                 </span>
                             </div>
-                            <Button size="default">
-                                <BookOpenIcon className="h-4 w-4 mr-2" />
-                                Pinjam
-                            </Button>
+                            <Link href='/register'>
+                                <Button size="default">
+                                    <BookOpenIcon className="h-4 w-4 mr-2" />
+                                    Pinjam
+                                </Button>
+                            </Link>
                         </CardContent>
                     </Card>
                 ))}
