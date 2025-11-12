@@ -49,7 +49,7 @@ const BooksPopular = () => {
     return (
         <section
             id="popular-books"
-            className="max-w-7xl mx-auto w-full py-16 px-6 sm:px-8"
+        className="max-w-7xl mx-auto w-full py-16 px-6 sm:px-8 scroll-m-20"
         >
             <div className="text-center">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
