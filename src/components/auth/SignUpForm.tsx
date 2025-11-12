@@ -1,6 +1,8 @@
+"use client"
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button/Navbutton";
 import { Card, CardContent } from "@/components/ui/card/card";
+import { registerUser } from "@/lib/auth";
 import {
   Field,
   FieldDescription,
@@ -11,17 +13,43 @@ import {
 import { Input } from "@/components/ui/input/input";
 import Image from "next/image";
 import Link from "next/link";
+import React, { useState } from "react";
 
 export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const [loading, setLoading] = useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  e.preventDefault();
+
+  const form = e.currentTarget;
+  const full_name = (form.elements.namedItem("name") as HTMLInputElement).value;
+  const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+  const password = (form.elements.namedItem("password") as HTMLInputElement).value;
+
+  try {
+    const res = await registerUser({
+      full_name,     
+      email,
+      password,
+      role_user: "user", 
+    });
+
+    console.log("Berhasil daftar:", res);
+  } catch (err) {
+    console.error("Gagal daftar:", err);
+  }
+}
+
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card className="overflow-hidden border-none shadow-md">
         <CardContent className="grid p-0 md:grid-cols-2">
           {/* Bagian Form */}
-          <form className="flex flex-col justify-center gap-4 p-6 md:p-10">
+          <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-4 p-6 md:p-10">
             <div className="text-center mb-4">
               <h1 className="text-3xl font-bold">Buat Akun Baru</h1>
               <p className="mt-1.5 md:text-center xs:text-lg text-[hsl(0_0%_45.1%)]">
@@ -60,8 +88,8 @@ export function RegisterForm({
                 />
               </Field>
 
-              <Button type="submit" className="w-full mt-2">
-                Daftar Sekarang
+              <Button type="submit" disabled={loading}>
+                {loading ? "Mendaftar..." : "Daftar"}
               </Button>
 
               <FieldSeparator>Atau daftar dengan</FieldSeparator>
