@@ -1,10 +1,12 @@
 "use client";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 import Image from "next/image";
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from "@/components/ui/card/card";
 import { StarIcon, BookOpenIcon } from "lucide-react";
-import {Button} from "@/components/ui/button/Navbutton";
+import { Button } from "@/components/ui/button/Navbutton";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const featuredBooks = [
     {
@@ -31,9 +33,12 @@ const featuredBooks = [
 ];
 
 const FeaturedBooks = () => {
+    useEffect(() => {
+        AOS.init({ duration: 1000 });
+    }, []);
     return (
         <section id="featured-books" className="max-w-7xl mx-auto px-6 py-16">
-            <div className="text-center">
+            <div data-aos="fade-down" className="text-center">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
                     Buku Unggulan Minggu Ini
                 </h2>
@@ -42,7 +47,7 @@ const FeaturedBooks = () => {
                 </p>
             </div>
 
-            <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div data-aos="zoom-in" className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                 {featuredBooks.map((book) => (
                     <Card
                         key={book.title}

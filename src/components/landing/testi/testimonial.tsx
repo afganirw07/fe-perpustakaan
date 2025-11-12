@@ -1,5 +1,6 @@
 "use client";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar/AvatarTesti";
 import {
     Carousel,
@@ -74,6 +75,10 @@ const Testimonial = () => {
     const [count, setCount] = useState(0);
 
     useEffect(() => {
+        AOS.init({ duration: 1000 });
+    }, []);
+
+    useEffect(() => {
         if (!api) {
             return;
         }
@@ -91,10 +96,10 @@ const Testimonial = () => {
             id="testimonials"
         className="w-full max-w-(--breakpoint-xl) mx-auto py-6 xs:py-12 px-6 scroll-m-20"
         >
-            <h2 className="mb-8 xs:mb-14 text-4xl md:text-5xl font-bold text-center tracking-tight">
+            <h2 data-aos="fade-down" className="mb-8 xs:mb-14 text-4xl md:text-5xl font-bold text-center tracking-tight">
                 Testimonial
             </h2>
-            <div className="container w-full mx-auto">
+            <div data-aos="fade-up" className="container w-full mx-auto">
                 <Carousel setApi={setApi}>
                     <CarouselContent>
                         {testimonials.map((testimonial) => (

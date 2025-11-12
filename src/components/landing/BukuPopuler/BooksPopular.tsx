@@ -1,5 +1,6 @@
 "use client";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 import Image from "next/image";
 import {
     Card,
@@ -11,6 +12,7 @@ import {
 
 import { Button } from "@/components/ui/button/Navbutton";
 import Link from "next/link";
+import { useEffect } from "react";
 
 const categories = [
     {
@@ -46,12 +48,15 @@ const categories = [
 ];
 
 const BooksPopular = () => {
+    useEffect(() => {
+        AOS.init({ duration: 1000 });
+    }, []);
     return (
         <section
             id="popular-books"
-        className="max-w-7xl mx-auto w-full py-16 px-6 sm:px-8 scroll-m-20"
+            className="max-w-7xl mx-auto w-full py-16 px-6 sm:px-8 scroll-m-20"
         >
-            <div className="text-center">
+            <div data-aos="fade-down" className="text-center">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
                     Kategori Buku Populer
                 </h2>
@@ -60,7 +65,7 @@ const BooksPopular = () => {
                 </p>
             </div>
 
-            <div className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div data-aos="zoom-in" className="mt-10 grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
                 {categories.map((cat) => (
                     <Card
                         key={cat.title}

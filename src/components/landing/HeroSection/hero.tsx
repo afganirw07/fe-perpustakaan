@@ -1,16 +1,25 @@
+"use client";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import React from "react";
 import Badge from "@/components/ui/badge/Badge";
 import { Button } from "@/components/ui/button/Navbutton";
 import { ArrowUpRight, Info, Search } from "lucide-react";
 import { AvatarDemo } from "./avatar";
 import Image from "next/image";
+import { useEffect } from "react";
 
 const HeroSection = () => {
+
+    useEffect(() => {
+        AOS.init({ duration: 1000 });
+    }, []);
+
     return (
         <div id="hero" className="min-h-[calc(100vh-4rem)] w-full flex items-center justify-center overflow-hidden border-b border-accent scroll-m-20">
             <div className="max-w-7xl w-full flex flex-col lg:flex-row mx-auto items-center justify-between gap-y-14 gap-x-10 px-6 py-12 lg:py-0">
 
-                <div className="max-w-xl">
+                <div  data-aos="fade-down-right" className="max-w-xl">
                     <div className="flex items-center gap-3">
                         <AvatarDemo />
                         <Badge color="info" variant="light">
@@ -66,7 +75,7 @@ const HeroSection = () => {
                 </div>
 
                 {/* Kolom Kanan: Gambar */}
-                <div className="relative lg:max-w-lg xl:max-w-xl w-full bg-[hsl(0_0%_14.9%)] rounded-xl aspect-square shadow-xl">
+                <div data-aos="fade-up-left" className="relative lg:max-w-lg xl:max-w-xl w-full bg-[hsl(0_0%_14.9%)] rounded-xl aspect-square shadow-xl">
                     <Image
                         src="/images/landing/hero.png"
                         fill

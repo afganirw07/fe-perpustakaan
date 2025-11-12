@@ -1,8 +1,10 @@
 "use client";
-
+import AOS from "aos";
+import "aos/dist/aos.css";
 import React from "react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card/card";
 import { BookOpen, MapPin, Users } from "lucide-react";
+import { useEffect } from "react";
 
 const visions = [
     {
@@ -26,13 +28,17 @@ const visions = [
 ];
 
 const AboutSection = () => {
+    useEffect(() => {
+        AOS.init({ duration: 1000 });
+    }, []);
+
     return (
         <section
             id="about-library"
             className="max-w-7xl mx-auto w-full py-20 md:py-28 px-6"
         >
             {/* Heading Section */}
-            <div className="text-center mb-12">
+            <div data-aos="fade-down" className="text-center mb-12">
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900">
                     Mengenal Lebih Dekat Perpustakaan Nasional
                 </h2>
@@ -43,7 +49,7 @@ const AboutSection = () => {
             </div>
 
             {/* Content Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div data-aos="fade-left" className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
                 {/* Left: Video */}
                 <div className="lg:order-2">
                     <div className="aspect-video w-full rounded-2xl overflow-hidden shadow-2xl border-4 border-white ring-4 ring-primary/30">
@@ -59,7 +65,7 @@ const AboutSection = () => {
                 </div>
 
                 {/* Right: Visi dan Misi */}
-                <div className="lg:order-1 space-y-6">
+                <div data-aos="fade-right" className="lg:order-1 space-y-6">
                     {visions.map((vision, index) => {
                         const Icon = vision.icon;
                         return (
