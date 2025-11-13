@@ -48,7 +48,7 @@ const FAQ = () => {
             id="faq"
             className="w-full max-w-(--breakpoint-xl) mx-auto py-8 xs:py-16 px-6 scroll-m-20"
         >
-            <div data-aos="fade-down" className="max-w-3xl mx-auto text-center">
+            <div data-aos="fade-right" className="max-w-3xl mx-auto text-center">
             <h2 className="md:text-center text-3xl xs:text-4xl md:text-5xl leading-[1.15]! font-bold tracking-tighter">
                 FAQ
             </h2>
@@ -57,7 +57,7 @@ const FAQ = () => {
             </p>
             </div>
 
-            <div data-aos="fade-up" className="min-h-[550px] md:min-h-[320px] xl:min-h-[300px]">
+            <div data-aos="fade-left" className="min-h-[550px] md:min-h-[320px] xl:min-h-[300px]">
                 <Accordion
                     type="single"
                     collapsible

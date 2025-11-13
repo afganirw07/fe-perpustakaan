@@ -21,6 +21,7 @@ export function RegisterForm({
 }: React.ComponentProps<"div">) {
   const [loading, setLoading] = useState(false);
 
+    // register
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
   e.preventDefault();
 

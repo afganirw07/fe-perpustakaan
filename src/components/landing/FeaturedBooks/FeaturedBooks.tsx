@@ -47,7 +47,7 @@ const FeaturedBooks = () => {
                 </p>
             </div>
 
-            <div data-aos="zoom-in" className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <div data-aos="fade-up" className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
                 {featuredBooks.map((book) => (
                     <Card
                         key={book.title}
