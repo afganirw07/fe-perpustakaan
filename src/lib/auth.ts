@@ -1,6 +1,11 @@
 import { apiFetch } from "./api";
 
-export async function registerUser(data: any) {
+export async function registerUser(data : {
+    full_name: string;
+    email: string;
+    password: string;
+    role_user: string;
+}) {
     return apiFetch("/api/users/create", {
         method: "POST",
         body: JSON.stringify(data),

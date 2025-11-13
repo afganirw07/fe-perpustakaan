@@ -89,8 +89,8 @@ export function RegisterForm({
                 />
               </Field>
 
-              <Button type="submit" disabled={loading}>
-                {loading ? "Mendaftar..." : "Daftar"}
+              <Button type="submit" className="">
+               Daftar
               </Button>
 
               <FieldSeparator>Atau daftar dengan</FieldSeparator>
