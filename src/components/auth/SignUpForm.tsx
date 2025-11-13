@@ -13,13 +13,11 @@ import {
 import { Input } from "@/components/ui/input/input";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useState } from "react";
 
 export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const [loading, setLoading] = useState(false);
 
     // register
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
