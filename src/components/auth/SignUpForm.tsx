@@ -57,7 +57,6 @@ export function RegisterForm({
 
     try {
       const res = await registerUser(validationResult.data);
-      console.log("Berhasil daftar:", res);
       toast.success("Berhasil daftar");
     } catch (err) {
       console.error("Gagal daftar:", err);

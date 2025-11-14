@@ -51,7 +51,6 @@ export function LoginForm({
     try {
       const { email, password } = validationResult.data;
       const res = await loginUser(email, password);
-      console.log("Berhasil masuk:", res);
       toast.success("Berhasil masuk");
     } catch (err) {
       console.error("Gagal masuk:", err); 
