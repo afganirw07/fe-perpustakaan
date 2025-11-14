@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input/input";
 import Image from "next/image";
 import Link from "next/link";
 import * as z from "zod";
+import { toast } from 'sonner';
 
 
 export function RegisterForm({
@@ -30,7 +31,7 @@ export function RegisterForm({
     role_user: z.literal("user"),
   });
 
-  // register
+  // handle register
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -50,18 +51,21 @@ export function RegisterForm({
       const fieldErrors = validationResult.error.flatten().fieldErrors;
       const errors = Object.values(fieldErrors).flat().join(", ");
       console.error(`Validasi gagal: ${errors}`);
+      toast.error(`Validasi gagal: ${errors}`);
       return;
     }
 
     try {
       const res = await registerUser(validationResult.data);
       console.log("Berhasil daftar:", res);
+      toast.success("Berhasil daftar");
     } catch (err) {
-      console.error("Gagal daftar:", err); // Log error for debugging
+      console.error("Gagal daftar:", err);
+      toast.error(`Gagal daftar: ${err instanceof Error ? err.message : String(err)}`);
     }
   }
 
-  
+
 
 
   return (
@@ -142,7 +146,7 @@ export function RegisterForm({
         </CardContent>
       </Card>
 
-      <FieldDescription className="text-center text-sm text-muted-foreground">
+      <FieldDescription className="text-center text-sm text-muted-foreground"> 
         Dengan mendaftar, Anda menyetujui{" "}
         <a href="#" className="text-primary font-bold hover:underline">
           Ketentuan Layanan

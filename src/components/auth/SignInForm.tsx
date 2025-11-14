@@ -15,17 +15,20 @@ import Image from "next/image";
 import Link from "next/link";
 import * as z from "zod";
 import { loginUser } from "@/lib/auth";
+import { toast } from "sonner"
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
 
+  // schema login user 
   const userLoginSchema = z.object({
     email: z.string().email("Email tidak valid"),
     password: z.string().min(8, "Kata sandi harus terdiri dari minimal 8 karakter"),
   })
 
+  // handle login
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -41,6 +44,7 @@ export function LoginForm({
       const fieldErrors = validationResult.error.flatten().fieldErrors;
       const errors = Object.values(fieldErrors).flat().join(", ");
       console.error(`Validasi gagal: ${errors}`);
+      toast.error(`Validasi gagal: ${errors}`);
       return;
     }
 
@@ -48,11 +52,16 @@ export function LoginForm({
       const { email, password } = validationResult.data;
       const res = await loginUser(email, password);
       console.log("Berhasil masuk:", res);
+      toast.success("Berhasil masuk");
     } catch (err) {
-      console.error("Gagal masuk:", err); // Log error for debugging
+      console.error("Gagal masuk:", err); 
+      toast.error(`Gagal masuk: ${err instanceof Error ? err.message : String(err)}`);
     }
   }
 
+  // const tesToast = () => {
+  //   toast.success("Ini adalah notifikasi sukses!");
+  // }
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>

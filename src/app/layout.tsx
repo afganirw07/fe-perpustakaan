@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "next-themes";
 
+import { Toaster } from "@/components/ui/sonner/sonner";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -73,6 +74,7 @@ export default function RootLayout({
           defaultTheme="light"    
           enableSystem={false}    
         >
+          <Toaster />
           {children}
         </ThemeProvider>
       </body>
