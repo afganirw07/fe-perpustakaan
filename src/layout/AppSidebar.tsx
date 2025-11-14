@@ -10,7 +10,6 @@ import {
   GridIcon,
   HorizontaLDots,
   ListIcon,
-  PageIcon,
   TableIcon,
   UserCircleIcon,
 } from "../icons/index";
@@ -34,7 +33,7 @@ const navItems: NavItem[] = [
     subItems: [
       { name: "Data Buku", path: "/data-buku", pro: false },
       { name: "Data Pengguna", path: "/data-pengguna", pro: false },
-    ],
+    ], 
   },
   {
     icon: <CalenderIcon />,
