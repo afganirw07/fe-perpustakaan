@@ -26,6 +26,8 @@
     "aos": "^2.3.4",
     "apexcharts": "^4.3.0",
     "autoprefixer": "^10.4.20",
+    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
     "embla-carousel-react": "^8.6.0",
     "flatpickr": "^4.6.13",
@@ -42,7 +44,8 @@
     "react-dropzone": "^14.3.5",
     "swiper": "^11.2.0",
     "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

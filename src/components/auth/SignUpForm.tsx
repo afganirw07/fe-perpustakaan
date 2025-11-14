@@ -1,4 +1,5 @@
 "use client"
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button/Navbutton";
 import { Card, CardContent } from "@/components/ui/card/card";
@@ -13,34 +14,54 @@ import {
 import { Input } from "@/components/ui/input/input";
 import Image from "next/image";
 import Link from "next/link";
+import * as z from "zod";
+
 
 export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
 
-    // register
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-  e.preventDefault();
+  // zod validation schema
+  const userRegisterSchema = z.object({
+    full_name: z.string().min(2, "Nama lengkap harus terdiri dari minimal 2 karakter"),
+    email: z.string().email("Email tidak valid"),
+    password: z.string().min(8, "Kata sandi harus terdiri dari minimal 8 karakter"),
+    role_user: z.literal("user"),
+  });
 
-  const form = e.currentTarget;
-  const full_name = (form.elements.namedItem("name") as HTMLInputElement).value;
-  const email = (form.elements.namedItem("email") as HTMLInputElement).value;
-  const password = (form.elements.namedItem("password") as HTMLInputElement).value;
+  // register
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
 
-  try {
-    const res = await registerUser({
-      full_name,     
+    const form = e.currentTarget;
+    const full_name = (form.elements.namedItem("name") as HTMLInputElement).value;
+    const email = (form.elements.namedItem("email") as HTMLInputElement).value;
+    const password = (form.elements.namedItem("password") as HTMLInputElement).value;
+
+    const validationResult = userRegisterSchema.safeParse({
+      full_name,
       email,
       password,
-      role_user: "user", 
+      role_user: "user",
     });
 
-    console.log("Berhasil daftar:", res);
-  } catch (err) {
-    console.error("Gagal daftar:", err);
+    if (!validationResult.success) {
+      const fieldErrors = validationResult.error.flatten().fieldErrors;
+      const errors = Object.values(fieldErrors).flat().join(", ");
+      console.error(`Validasi gagal: ${errors}`);
+      return;
+    }
+
+    try {
+      const res = await registerUser(validationResult.data);
+      console.log("Berhasil daftar:", res);
+    } catch (err) {
+      console.error("Gagal daftar:", err); // Log error for debugging
+    }
   }
-}
+
+  
 
 
   return (
@@ -48,7 +69,7 @@ export function RegisterForm({
       <Card className="overflow-hidden border-none shadow-md">
         <CardContent className="grid p-0 md:grid-cols-2">
           {/* Bagian Form */}
-          <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-4 p-6 md:p-10">
+          <form onSubmit={handleSubmit} className="flex flex-col justify-center gap-4 p-6 md:p-10 relative">
             <div className="text-center mb-4">
               <h1 className="text-3xl font-bold">Buat Akun Baru</h1>
               <p className="mt-1.5 md:text-center xs:text-lg text-[hsl(0_0%_45.1%)]">
@@ -88,7 +109,7 @@ export function RegisterForm({
               </Field>
 
               <Button type="submit" className="">
-               Daftar
+                Daftar
               </Button>
 
               <FieldSeparator>Atau daftar dengan</FieldSeparator>

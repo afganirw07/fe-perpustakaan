@@ -8,12 +8,18 @@ import { ArrowUpRight, Info, Search } from "lucide-react";
 import { AvatarDemo } from "./avatar";
 import Image from "next/image";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const HeroSection = () => {
+    const router = useRouter();
 
     useEffect(() => {
         AOS.init({ duration: 1000 });
     }, []);
+
+    const toRegister = () => {
+        router.push("/register");
+    }
 
     return (
         <div id="hero" className="min-h-[calc(100vh-4rem)] w-full flex items-center justify-center overflow-hidden border-b border-accent scroll-m-20">
@@ -46,6 +52,7 @@ const HeroSection = () => {
                                 className="w-full h-14 px-5 py-3 outline-none text-gray-700 placeholder-gray-400 text-base bg-transparent rounded-l-xl"
                             />
                             <Button
+                                onClick={toRegister}
                                 size="lg"
                                 className="h-14 w-14 rounded-r-xl rounded-l-none flex-shrink-0 bg-primary hover:bg-primary/90 !text-black"
                             >
@@ -57,15 +64,17 @@ const HeroSection = () => {
                         {/* CTA Buttons */}
                         <div className="flex flex-col sm:flex-row items-center gap-4">
                             <Button
+                                onClick={toRegister}
                                 size="lg"
                                 className="w-full sm:w-auto rounded-full text-base"
                             >
                                 Cari & Pesan Buku <ArrowUpRight className="h-5 w-5 ml-2" />
                             </Button>
                             <Button
+                                onClick={toRegister}
                                 variant="outline"
                                 size="lg"
-                                className="w-full sm:w-auto rounded-full text-base shadow-sm border-gray-300 hover:bg-gray-50 text-gray-700"
+                                className="w-full sm:w-auto rounded-full text-base shadow-sm border-gray-300 text-gray-700"
                             >
                                 <Info className="h-5 w-5 mr-2" /> Panduan Pinjam Online
                             </Button>
