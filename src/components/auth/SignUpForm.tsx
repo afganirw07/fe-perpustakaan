@@ -1,5 +1,4 @@
 "use client"
-import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button/Navbutton";
 import { Card, CardContent } from "@/components/ui/card/card";
@@ -56,7 +55,7 @@ export function RegisterForm({
     }
 
     try {
-      const res = await registerUser(validationResult.data);
+      await registerUser(validationResult.data);
       toast.success("Berhasil daftar");
     } catch (err) {
       console.error("Gagal daftar:", err);

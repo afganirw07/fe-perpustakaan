@@ -1,5 +1,4 @@
 "use client";
-import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button/Navbutton";
 import { Card, CardContent } from "@/components/ui/card/card";
@@ -50,7 +49,7 @@ export function LoginForm({
 
     try {
       const { email, password } = validationResult.data;
-      const res = await loginUser(email, password);
+      await loginUser(email, password);
       toast.success("Berhasil masuk");
     } catch (err) {
       console.error("Gagal masuk:", err); 
