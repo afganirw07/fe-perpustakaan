@@ -57,7 +57,7 @@ export function LoginForm({
         router.push("/homepage");
       }, 2000);
     } catch (err) {
-      console.error("Gagal masuk:", err); 
+      console.error("Gagal masuk:", err);
       toast.error(`Gagal masuk: ${err instanceof Error ? err.message : String(err)}`);
     }
   }

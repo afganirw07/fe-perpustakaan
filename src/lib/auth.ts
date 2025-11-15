@@ -1,6 +1,6 @@
 import { apiFetch } from "./api";
 
-export async function registerUser(data : {
+export async function registerUser(data: {
     full_name: string;
     email: string;
     password: string;
@@ -18,6 +18,10 @@ export async function loginUser(email: string, password: string) {
         body: JSON.stringify({ email, password }),
     });
 
-    if (res.token) localStorage.setItem("token", res.token);
+    if (res.access_token) {
+        sessionStorage.setItem("access_token", res.access_token);
+        sessionStorage.setItem("refresh_token", res.refresh_token);
+        sessionStorage.setItem("user_email", res.user);
+    }
     return res;
 }
