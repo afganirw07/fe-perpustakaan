@@ -15,11 +15,13 @@ import Link from "next/link";
 import * as z from "zod";
 import { loginUser } from "@/lib/auth";
 import { toast } from "sonner"
+import { useRouter } from "next/router";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
 
   // schema login user 
   const userLoginSchema = z.object({
@@ -51,6 +53,9 @@ export function LoginForm({
       const { email, password } = validationResult.data;
       await loginUser(email, password);
       toast.success("Berhasil masuk");
+      setTimeout(() => {
+        router.push("/homepage");
+      }, 2000);
     } catch (err) {
       console.error("Gagal masuk:", err); 
       toast.error(`Gagal masuk: ${err instanceof Error ? err.message : String(err)}`);

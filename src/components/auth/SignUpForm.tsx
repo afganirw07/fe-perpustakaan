@@ -15,12 +15,15 @@ import Image from "next/image";
 import Link from "next/link";
 import * as z from "zod";
 import { toast } from 'sonner';
+import { useRouter } from "next/router";
 
 
 export function RegisterForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
+  const router = useRouter();
+
 
   // zod validation schema
   const userRegisterSchema = z.object({
@@ -57,6 +60,9 @@ export function RegisterForm({
     try {
       await registerUser(validationResult.data);
       toast.success("Berhasil daftar");
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     } catch (err) {
       console.error("Gagal daftar:", err);
       toast.error(`Gagal daftar: ${err instanceof Error ? err.message : String(err)}`);
