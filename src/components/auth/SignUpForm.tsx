@@ -14,8 +14,8 @@ import { Input } from "@/components/ui/input/input";
 import Image from "next/image";
 import Link from "next/link";
 import * as z from "zod";
-import { toast } from 'sonner';
-import { useRouter } from "next/router";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 
 export function RegisterForm({

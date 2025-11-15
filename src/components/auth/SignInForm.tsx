@@ -15,7 +15,7 @@ import Link from "next/link";
 import * as z from "zod";
 import { loginUser } from "@/lib/auth";
 import { toast } from "sonner"
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 export function LoginForm({
   className,
