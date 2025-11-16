@@ -10,9 +10,9 @@ import {
     GridIcon,
     HorizontaLDots,
     ListIcon,
-    PageIcon,
     UserCircleIcon,
 } from "../icons/index";
+import { Heart } from 'lucide-react';
 
 type NavItem = {
     name: string;
@@ -25,7 +25,7 @@ const navItems: NavItem[] = [
     {
         icon: <GridIcon />,
         name: "Katalog Buku",
-        subItems: [{ name: "Semua Buku", path: "/buku" }],
+        subItems: [{ name: "Semua Buku", path: "/homepage" }],
     },
     {
         icon: <ListIcon />,
@@ -36,7 +36,7 @@ const navItems: NavItem[] = [
         ],
     },
     {
-        icon: <PageIcon />,
+        icon: <Heart />,
         name: "Favorit",
         path: "/favorit",
     },

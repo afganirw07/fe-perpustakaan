@@ -24,4 +24,4 @@ export async function loginUser(email: string, password: string) {
         sessionStorage.setItem("user_email", res.user);
     }
     return res;
-}
+}       

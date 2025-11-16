@@ -1,10 +1,10 @@
-
+import Books from "@/components/users/Books"
 
 export default function HomePage() {
 
     return (
         <>
-        <h1>Homepage</h1>
+        <Books />
         </>
     )
 }
