@@ -21,7 +21,10 @@ export async function loginUser(email: string, password: string) {
     if (res.access_token) {
         sessionStorage.setItem("access_token", res.access_token);
         sessionStorage.setItem("refresh_token", res.refresh_token);
-        sessionStorage.setItem("user_email", res.user);
+        sessionStorage.setItem("user_id", res.user_id);   
+        sessionStorage.setItem("full_name", res.full_name);   
+        sessionStorage.setItem("role_user", res.role_user)
+        sessionStorage.setItem("email", res.email   )
     }
     return res;
 }       

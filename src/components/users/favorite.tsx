@@ -1,8 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import { Heart, Star } from "lucide-react";
-import { addUserFavorite, readFavorite, removeUserFavorite } from "@/lib/favorite";
-import { FetchBooks } from "@/lib/books";
+import { addUserFavorite, readFavoriteLikes } from "@/lib/favorite";
 
 
 const BookRating = ({ count }) => {
@@ -18,30 +17,21 @@ const BookRating = ({ count }) => {
     return <div className="flex space-x-0.5 ">{stars}</div>;
 };
 
-export default function Books() {
+export default function FavoriteBook() {
     const [books, setBooks] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [wishlist, setWishlist] = useState(new Set());
 
     useEffect(() => {
-        const loadBooks = async () => {
+        const loadFavorite = async () => {
             try {
                 setIsLoading(true);
-
                 const userId = sessionStorage.getItem("user_id");
+                if (!userId) return;
 
-                const allBooks = await FetchBooks();
-
-                let favoriteBooks = [];
-                if (userId) {
-                    const favorites = await readFavorite(userId);
-                    favoriteBooks = favorites.map(fav => fav.book_id);
-                }
-
-                setWishlist(new Set(favoriteBooks));
-
-                setBooks(allBooks || []);
+                const data = await readFavoriteLikes(userId);
+                setBooks(data || []);
             } catch (err) {
                 console.error("Gagal mengambil data buku:", err);
                 setError("Gagal memuat data. Silakan coba lagi.");
@@ -51,30 +41,28 @@ export default function Books() {
             }
         };
 
-        loadBooks();
+        loadFavorite();
     }, []);
 
 
-    const toggleFavorite = async (bookId) => {
-        const userId = sessionStorage.getItem("user_id");
-        if (!userId) return;
+    // Fungsi untuk menambahkan buku ke daftar favorit
+    const favoriteBook = async (bookId) => {
+        const userId = sessionStorage.getItem("user_id"); 
 
-        const isFavorite = wishlist.has(bookId);
+        if (!userId) {
+            console.warn("User belum login");
+            return;
+        }
 
         try {
-            if (isFavorite) {
-                await removeUserFavorite({ user_id: userId, book_id: bookId });
-                setWishlist(prev => {
-                    const newSet = new Set(prev);
-                    newSet.delete(bookId);
-                    return newSet;
-                });
-            } else {
-                await addUserFavorite({ user_id: userId, book_id: bookId });
-                setWishlist(prev => new Set([...prev, bookId]));
-            }
+            await addUserFavorite({
+                user_id: userId,
+                book_id: bookId,
+            });
+
+            setWishlist(prev => new Set([...prev, bookId]));
         } catch (err) {
-            console.error("Gagal memperbarui status wishlist:", err);
+            console.error("Gagal menambahkan buku ke wishlist:", err);
         }
     };
 
@@ -104,12 +92,12 @@ export default function Books() {
                                 className="w-full h-full object-cover"
                             />
                             <div
-                                onClick={() => toggleFavorite(book.id)}
+                                onClick={() => favoriteBook(book.id)}
                                 className="absolute top-2 right-2 p-2 bg-white/70 backdrop-blur-sm rounded-full cursor-pointer hover:bg-white transition"
                             >
                                 <Heart
-                                    className={`transition-colors duration-300 ${wishlist.has(book.id) ? 'text-red-500 fill-red-500' : 'text-black'
-                                        }`}
+                                    // Ikon Hati Selalu Merah di halaman Favorit
+                                    className="transition-colors duration-300 text-red-500 fill-red-500"
                                 />
                             </div>
                         </div>
@@ -122,7 +110,8 @@ export default function Books() {
                                 {book.author}
                             </p>
                             <div className="mt-2 flex justify-center">
-                                <BookRating count={book.stars} />
+                                {/* Bintang Rating Selalu 5 (menyala penuh) */}
+                                <BookRating count={5} /> 
                             </div>
                         </div>
                     </div>
