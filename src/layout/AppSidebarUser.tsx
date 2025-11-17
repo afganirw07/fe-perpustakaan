@@ -93,7 +93,7 @@ const AppSidebar: React.FC = () => {
                                 <ChevronDownIcon
                                     className={`ml-auto w-5 h-5 transition-transform duration-200  ${openSubmenu?.type === menuType &&
                                         openSubmenu?.index === index
-                                        ? "rotate-180 text-brand-500"
+                                        ? "rotate-180 text-black"
                                         : ""
                                         }`}
                                 />
@@ -256,24 +256,22 @@ const AppSidebar: React.FC = () => {
             onMouseLeave={() => setIsHovered(false)}
         >
             <div className="py-8 flex justify-center items-center">
-                <Link href="/admin">
-                    <>
-                        <Image
-                            className="dark:hidden"
-                            src="/images/logo/logo.svg"
-                            alt="Logo"
-                            width={150}
-                            height={70}
-                        />
-                        <Image
-                            className="hidden dark:block"
-                            src="/images/logo/logo-dark.svg"
-                            alt="Logo"
-                            width={150}
-                            height={40}
-                        />
-                    </>
-                </Link>
+                <>
+                    <Image
+                        className="dark:hidden"
+                        src="/images/logo/logo.svg"
+                        alt="Logo"
+                        width={150}
+                        height={70}
+                    />
+                    <Image
+                        className="hidden dark:block"
+                        src="/images/logo/logo-dark.svg"
+                        alt="Logo"
+                        width={150}
+                        height={40}
+                    />
+                </>
             </div>
 
             <div className="flex flex-col overflow-y-auto duration-300 ease-linear no-scrollbar">
