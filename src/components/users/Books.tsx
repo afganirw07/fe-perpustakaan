@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import { Heart, Star } from "lucide-react";
-import { addUserFavorite, readFavorite, removeUserFavorite } from "@/lib/favorite";
+import { addUserFavorite, readFavorite, deleteFavorite } from "@/lib/favorite";
 import { FetchBooks } from "@/lib/books";
 
 
@@ -63,7 +63,7 @@ export default function Books() {
 
         try {
             if (isFavorite) {
-                await removeUserFavorite({ user_id: userId, book_id: bookId });
+                await deleteFavorite({ user_id: userId, book_id: bookId }); // pake deleteFavorite
                 setWishlist(prev => {
                     const newSet = new Set(prev);
                     newSet.delete(bookId);
@@ -77,6 +77,7 @@ export default function Books() {
             console.error("Gagal memperbarui status wishlist:", err);
         }
     };
+
 
 
     if (isLoading) {

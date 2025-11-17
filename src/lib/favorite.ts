@@ -21,3 +21,10 @@ export async function readFavoriteLikes(user_id: string) {
         method: "GET",
     });
 }
+
+
+export async function deleteFavorite({ user_id, book_id }: { user_id: string; book_id: number }) {
+    return apiFetch(`/api/favorite/${user_id}/${book_id}`, {
+        method: "DELETE",
+    });
+}

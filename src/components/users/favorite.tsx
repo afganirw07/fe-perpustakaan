@@ -1,7 +1,7 @@
 "use client"
 import { useState, useEffect } from "react";
 import { Heart, Star } from "lucide-react";
-import { addUserFavorite, readFavoriteLikes } from "@/lib/favorite";
+import { deleteFavorite, readFavoriteLikes } from "@/lib/favorite";
 
 
 const BookRating = ({ count }) => {
@@ -45,26 +45,20 @@ export default function FavoriteBook() {
     }, []);
 
 
-    // Fungsi untuk menambahkan buku ke daftar favorit
-    const favoriteBook = async (bookId) => {
-        const userId = sessionStorage.getItem("user_id"); 
-
-        if (!userId) {
-            console.warn("User belum login");
-            return;
-        }
+    // Fungsi delete favorite
+    const deleteFavoriteBook = async (bookId) => {
+        const userId = sessionStorage.getItem("user_id");
+        if (!userId) return;
 
         try {
-            await addUserFavorite({
-                user_id: userId,
-                book_id: bookId,
-            });
+            await deleteFavorite(userId, bookId);
 
-            setWishlist(prev => new Set([...prev, bookId]));
+            setBooks(prev => prev.filter(book => book.id !== bookId));
         } catch (err) {
-            console.error("Gagal menambahkan buku ke wishlist:", err);
+            console.error("Gagal menghapus buku dari wishlist:", err);
         }
     };
+
 
 
     if (isLoading) {
@@ -92,11 +86,10 @@ export default function FavoriteBook() {
                                 className="w-full h-full object-cover"
                             />
                             <div
-                                onClick={() => favoriteBook(book.id)}
+                                onClick={() => deleteFavoriteBook(book.id)}
                                 className="absolute top-2 right-2 p-2 bg-white/70 backdrop-blur-sm rounded-full cursor-pointer hover:bg-white transition"
                             >
                                 <Heart
-                                    // Ikon Hati Selalu Merah di halaman Favorit
                                     className="transition-colors duration-300 text-red-500 fill-red-500"
                                 />
                             </div>
@@ -110,8 +103,7 @@ export default function FavoriteBook() {
                                 {book.author}
                             </p>
                             <div className="mt-2 flex justify-center">
-                                {/* Bintang Rating Selalu 5 (menyala penuh) */}
-                                <BookRating count={5} /> 
+                                <BookRating count={5} />
                             </div>
                         </div>
                     </div>
