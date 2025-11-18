@@ -31,7 +31,7 @@ const HeroSection = () => {
         <div id="hero" className="min-h-[calc(100vh-4rem)] w-full flex items-center justify-center overflow-hidden border-b border-accent scroll-m-20">
             <div className="max-w-7xl w-full flex flex-col lg:flex-row mx-auto items-center justify-between gap-y-14 gap-x-10 px-6 py-12 lg:py-0">
 
-                <div  data-aos="fade-down-right" className="max-w-xl">
+                <div data-aos="fade-down-right" className="max-w-xl">
                     <div className="flex items-center gap-3">
                         <AvatarDemo />
                         <Badge color="info" variant="light">
@@ -50,12 +50,12 @@ const HeroSection = () => {
 
                     <div className="mt-10 flex flex-col gap-6">
 
-                        {/* Search Bar yang Diperbaiki dan Disederhanakan */}
                         <div className="flex items-center w-full max-w-lg border border-gray-300 rounded-xl bg-white  transition duration-150 ease-in-out focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/50">
                             <input
                                 type="text"
                                 placeholder="Cari Koleksi Buku, Jurnal, atau Fasilitas..."
-                                className="w-full h-14 px-5 py-3 outline-none text-gray-700 placeholder-gray-400 text-base bg-transparent rounded-l-xl"
+                                className="w-full h-14 px-5 py-3 outline-none text-gray-700 placeholder-gray-400 
+                                text-base bg-transparent rounded-l-xl"
                                 onKeyDown={handleSearchEnter}
                             />
                             <Button

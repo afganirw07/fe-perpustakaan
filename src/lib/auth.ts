@@ -28,3 +28,7 @@ export async function loginUser(email: string, password: string) {
     }
     return res;
 }       
+
+export default async function FetchUsers() {
+    return apiFetch("/api/users");
+}
