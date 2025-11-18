@@ -58,12 +58,6 @@ export default function DataPengguna() {
                                     isHeader
                                     className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                                 >
-                                    Password
-                                </TableCell>
-                                <TableCell
-                                    isHeader
-                                    className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
-                                >
                                     Role
                                 </TableCell>
                                 <TableCell
@@ -88,12 +82,9 @@ export default function DataPengguna() {
                                         {user.email}
                                     </TableCell>
                                     <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                        {user.password.slice(0, 9)}...
-                                    </TableCell>
-                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                         {user.role_user.toUpperCase()}
                                     </TableCell>
-                                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 flex gap-2">
+                                    <TableCell className="px-2 py-3 text-gray-500 text-theme-sm dark:text-gray-400 flex gap-2">
                                         <Button variant="outline" size="icon" className="h-8 w-8 bg-blue-600 hover:bg-blue-700 text-white"><Edit className="h-4 w-4" /></Button>
                                         <Button variant="outline" size="icon" className="h-8 w-8 bg-red-600 hover:bg-red-700 text-white"><Trash2 className="h-4 w-4" /></Button>
                                     </TableCell>

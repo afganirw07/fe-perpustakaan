@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import { Heart, Star } from "lucide-react";
 import { addUserFavorite, readFavorite, deleteFavorite } from "@/lib/favorite";
-import { FetchBooks } from "@/lib/books";
 import { toast } from "sonner"
+import FetchBooks from "@/lib/books";
 
 
 const BookRating = ({ count }) => {

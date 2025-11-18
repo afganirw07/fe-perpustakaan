@@ -19,15 +19,17 @@ export async function loginUser(email: string, password: string) {
     });
 
     if (res.access_token) {
-        sessionStorage.setItem("access_token", res.access_token);
-        sessionStorage.setItem("refresh_token", res.refresh_token);
-        sessionStorage.setItem("user_id", res.user_id);   
-        sessionStorage.setItem("full_name", res.full_name);   
-        sessionStorage.setItem("role_user", res.role_user)
-        sessionStorage.setItem("email", res.email   )
+        document.cookie = `access_token=${res.access_token}; Path=/; Max-Age=86400;`;
+        document.cookie = `role=${res.role_user}; Path=/; Max-Age=86400;`;
+        document.cookie = `user_id=${res.user_id}; Path=/; Max-Age=86400;`;
+
+        sessionStorage.setItem("full_name", res.full_name);
+        sessionStorage.setItem("email", res.email);
     }
+
     return res;
-}       
+}
+
 
 export default async function FetchUsers() {
     return apiFetch("/api/users");
