@@ -25,7 +25,7 @@ const navItems: NavItem[] = [
     {
         icon: <GridIcon />,
         name: "Katalog Buku",
-        subItems: [{ name: "Semua Buku", path: "/homepage" }],
+        subItems: [{ name: "Semua Buku", path: "/user/homepage" }],
     },
     {
         icon: <ListIcon />,
@@ -38,7 +38,7 @@ const navItems: NavItem[] = [
     {
         icon: <Heart />,
         name: "Favorit",
-        path: "/favorit",
+        path: "/user/favorit",
     },
     {
         icon: <CalenderIcon />,

@@ -23,11 +23,19 @@ export default function FavoriteBook() {
     const [error, setError] = useState(null);
     const [wishlist, setWishlist] = useState(new Set());
 
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+
+
     useEffect(() => {
         const loadFavorite = async () => {
             try {
                 setIsLoading(true);
-                const userId = sessionStorage.getItem("user_id");
+                const userId = getCookie("user_id");
+
                 if (!userId) return;
 
                 const data = await readFavoriteLikes(userId);
@@ -47,8 +55,8 @@ export default function FavoriteBook() {
 
     // Fungsi delete favorite
     const deleteFavoriteBook = async (bookId) => {
-        const userId = sessionStorage.getItem("user_id");
-        if (!userId) return;    
+        const userId = getCookie("user_id");
+        if (!userId) return;
 
         try {
             await deleteFavorite({ user_id: userId, book_id: bookId });

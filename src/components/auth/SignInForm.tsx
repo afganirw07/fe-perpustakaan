@@ -54,7 +54,7 @@ export function LoginForm({
       await loginUser(email, password);
       toast.success("Berhasil masuk");
       setTimeout(() => {
-        router.push("/homepage");
+        router.push("/user/homepage");
       }, 2000);
     } catch (err) {
       console.error("Gagal masuk:", err);

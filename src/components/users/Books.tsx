@@ -25,12 +25,20 @@ export default function Books() {
     const [error, setError] = useState(null);
     const [wishlist, setWishlist] = useState(new Set());
 
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+
+
     useEffect(() => {
         const loadBooks = async () => {
             try {
                 setIsLoading(true);
 
-                const userId = sessionStorage.getItem("user_id");
+                // const userId = sessionStorage.getItem("user_id");
+                const userId = getCookie("user_id");
 
                 const allBooks = await FetchBooks();
 
@@ -57,14 +65,15 @@ export default function Books() {
 
 
     const toggleFavorite = async (bookId) => {
-        const userId = sessionStorage.getItem("user_id");
+        const userId = getCookie("user_id");
+
         if (!userId) return;
 
         const isFavorite = wishlist.has(bookId);
 
         try {
             if (isFavorite) {
-                await deleteFavorite({ user_id: userId, book_id: bookId }); 
+                await deleteFavorite({ user_id: userId, book_id: bookId });
                 toast.success("Berhasil dihapus dari favorite");
                 setWishlist(prev => {
                     const newSet = new Set(prev);

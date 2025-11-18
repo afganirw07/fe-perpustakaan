@@ -1,3 +1,10 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "403 Forbidden - Akses Ditolak",
+    description: "Anda tidak memiliki izin untuk mengakses halaman ini.",
+};
+
 export default function ForbiddenPage() {
     return (
         <div className="flex flex-col items-center justify-center h-screen">
