@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Heart, Star } from "lucide-react";
 import { deleteFavorite, readFavoriteLikes } from "@/lib/favorite";
-
+import { toast } from "sonner"
 
 const BookRating = ({ count }) => {
     const stars = [];
@@ -48,11 +48,11 @@ export default function FavoriteBook() {
     // Fungsi delete favorite
     const deleteFavoriteBook = async (bookId) => {
         const userId = sessionStorage.getItem("user_id");
-        if (!userId) return;
+        if (!userId) return;    
 
         try {
-            await deleteFavorite(userId, bookId);
-
+            await deleteFavorite({ user_id: userId, book_id: bookId });
+            toast.success("Berhasil dihapus dari favorite");
             setBooks(prev => prev.filter(book => book.id !== bookId));
         } catch (err) {
             console.error("Gagal menghapus buku dari wishlist:", err);

@@ -21,6 +21,12 @@ const HeroSection = () => {
         router.push("/register");
     }
 
+    const handleSearchEnter = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            router.push('/login');
+        }
+    };
+
     return (
         <div id="hero" className="min-h-[calc(100vh-4rem)] w-full flex items-center justify-center overflow-hidden border-b border-accent scroll-m-20">
             <div className="max-w-7xl w-full flex flex-col lg:flex-row mx-auto items-center justify-between gap-y-14 gap-x-10 px-6 py-12 lg:py-0">
@@ -50,6 +56,7 @@ const HeroSection = () => {
                                 type="text"
                                 placeholder="Cari Koleksi Buku, Jurnal, atau Fasilitas..."
                                 className="w-full h-14 px-5 py-3 outline-none text-gray-700 placeholder-gray-400 text-base bg-transparent rounded-l-xl"
+                                onKeyDown={handleSearchEnter}
                             />
                             <Button
                                 onClick={toRegister}

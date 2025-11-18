@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Heart, Star } from "lucide-react";
 import { addUserFavorite, readFavorite, deleteFavorite } from "@/lib/favorite";
 import { FetchBooks } from "@/lib/books";
+import { toast } from "sonner"
 
 
 const BookRating = ({ count }) => {
@@ -63,7 +64,8 @@ export default function Books() {
 
         try {
             if (isFavorite) {
-                await deleteFavorite({ user_id: userId, book_id: bookId }); // pake deleteFavorite
+                await deleteFavorite({ user_id: userId, book_id: bookId }); 
+                toast.success("Berhasil dihapus dari favorite");
                 setWishlist(prev => {
                     const newSet = new Set(prev);
                     newSet.delete(bookId);
@@ -71,10 +73,12 @@ export default function Books() {
                 });
             } else {
                 await addUserFavorite({ user_id: userId, book_id: bookId });
+                toast.success("Berhasil ditambahkan ke favorite");
                 setWishlist(prev => new Set([...prev, bookId]));
             }
         } catch (err) {
             console.error("Gagal memperbarui status wishlist:", err);
+            toast.error("Gagal memperbarui status favorite");
         }
     };
 
