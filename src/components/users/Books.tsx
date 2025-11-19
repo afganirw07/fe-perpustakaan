@@ -1,62 +1,82 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import { Heart, Star } from "lucide-react";
 import { addUserFavorite, readFavorite, deleteFavorite } from "@/lib/favorite";
-import { toast } from "sonner"
+import { toast } from "sonner";
 import FetchBooks from "@/lib/books";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 
-const BookRating = ({ count }) => {
-    const stars = [];
-    for (let i = 0; i < 5; i++) {
-        stars.push(
-            <Star
-                key={i}
-                className={`w-4 h-4 ${i < count ? 'text-orange-500 fill-orange-500' : 'text-gray-300'}`}
-            />
-        );
-    }
-    return <div className="flex space-x-0.5 ">{stars}</div>;
+interface Book {
+    id: number;
+    title: string;
+    author: string;
+    publisher?: string;
+    year?: number;
+    isbn?: string;
+    category?: string;
+    description?: string;
+    image: string;
+    stock?: number;
+    total_pages?: number;
+    language?: string;
+    location_code?: string;
+    condition?: string;
+    is_available?: boolean;
+    stars: number;
+}
+
+interface BookRatingProps {
+    count: number;
+}
+
+const BookRating = ({ count }: BookRatingProps) => {
+    return (
+        <div className="flex space-x-0.5">
+            {Array.from({ length: 5 }).map((_, i) => (
+                <Star
+                    key={i}
+                    className={`w-4 h-4 ${i < count ? "text-orange-500 fill-orange-500" : "text-gray-300"
+                        }`}
+                />
+            ))}
+        </div>
+    );
 };
 
 export default function Books() {
-    const [books, setBooks] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [wishlist, setWishlist] = useState(new Set());
+    const router = useRouter();
 
-    function getCookie(name) {
+    const [books, setBooks] = useState<Book[]>([]);
+    const [wishlist, setWishlist] = useState<Set<number>>(new Set());
+    const [error, setError] = useState<string | null>(null);
+
+    function getCookie(name: string): string | undefined {
         const value = `; ${document.cookie}`;
         const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(";").shift();
+        if (parts.length === 2) return parts.pop()?.split(";")[0];
     }
-
 
     useEffect(() => {
         const loadBooks = async () => {
             try {
-                setIsLoading(true);
-
-                // const userId = sessionStorage.getItem("user_id");
                 const userId = getCookie("user_id");
 
-                const allBooks = await FetchBooks();
+                const allBooks: Book[] = await FetchBooks();
 
-                let favoriteBooks = [];
+                let favoriteBooks: number[] = [];
                 if (userId) {
                     const favorites = await readFavorite(userId);
-                    favoriteBooks = favorites.map(fav => fav.book_id);
+                    favoriteBooks = favorites.map((fav: { book_id: number }) => fav.book_id);
                 }
 
                 setWishlist(new Set(favoriteBooks));
-
                 setBooks(allBooks || []);
             } catch (err) {
-                console.error("Gagal mengambil data buku:", err);
-                setError("Gagal memuat data. Silakan coba lagi.");
+                console.error("Error fetching books:", err);
+                setError("Gagal mengambil data buku.");
                 setBooks([]);
-            } finally {
-                setIsLoading(false);
             }
         };
 
@@ -64,9 +84,13 @@ export default function Books() {
     }, []);
 
 
-    const toggleFavorite = async (bookId) => {
-        const userId = getCookie("user_id");
+    const toggleFavorite = async (
+        bookId: number,
+        e: React.MouseEvent<HTMLDivElement>
+    ) => {
+        e.stopPropagation(); 
 
+        const userId = getCookie("user_id");
         if (!userId) return;
 
         const isFavorite = wishlist.has(bookId);
@@ -75,7 +99,8 @@ export default function Books() {
             if (isFavorite) {
                 await deleteFavorite({ user_id: userId, book_id: bookId });
                 toast.success("Berhasil dihapus dari favorite");
-                setWishlist(prev => {
+
+                setWishlist((prev) => {
                     const newSet = new Set(prev);
                     newSet.delete(bookId);
                     return newSet;
@@ -83,46 +108,42 @@ export default function Books() {
             } else {
                 await addUserFavorite({ user_id: userId, book_id: bookId });
                 toast.success("Berhasil ditambahkan ke favorite");
-                setWishlist(prev => new Set([...prev, bookId]));
+
+                setWishlist((prev) => new Set([...prev, bookId]));
             }
         } catch (err) {
-            console.error("Gagal memperbarui status wishlist:", err);
+            console.error("Gagal update favorite:", err);
             toast.error("Gagal memperbarui status favorite");
         }
     };
 
-
-
-    if (isLoading) {
-        return <div className="flex h-screen items-center justify-center">Memuat data buku...</div>;
-    }
-
-    if (error) {
-        return <div className="flex h-screen items-center justify-center text-red-600">{error}</div>;
-    }
-
-    if (books.length === 0) {
-        return <div className="flex h-screen items-center justify-center text-gray-500">Tidak ada buku ditemukan.</div>;
-    }
-
-
     return (
-        <div className="">
+        <div>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
                 {books.map((book) => (
-                    <div key={book.id} className="group cursor-pointer text-center">
+                    <div
+                        key={book.id}
+                        className="group cursor-pointer text-center"
+                        onClick={() => router.push(`/user/detail/${book.id}`)}
+                    >
                         <div className="relative h-64 w-full overflow-hidden rounded-lg">
-                            <img
+                            <Image
                                 src={book.image}
                                 alt={`Sampul buku: ${book.title}`}
                                 className="w-full h-full object-cover"
+                                width={200}
+                                height={300}
                             />
+
+                            {/* Favorite Button */}
                             <div
-                                onClick={() => toggleFavorite(book.id)}
+                                onClick={(e) => toggleFavorite(book.id, e)}
                                 className="absolute top-2 right-2 p-2 bg-white/70 backdrop-blur-sm rounded-full cursor-pointer hover:bg-white transition"
                             >
                                 <Heart
-                                    className={`transition-colors duration-300 ${wishlist.has(book.id) ? 'text-red-500 fill-red-500' : 'text-black'
+                                    className={`transition-colors duration-300 ${wishlist.has(book.id)
+                                            ? "text-red-500 fill-red-500"
+                                            : "text-black"
                                         }`}
                                 />
                             </div>
@@ -132,9 +153,7 @@ export default function Books() {
                             <h3 className="text-lg font-semibold text-gray-800 truncate">
                                 {book.title}
                             </h3>
-                            <p className="text-sm text-gray-500">
-                                {book.author}
-                            </p>
+                            <p className="text-sm text-gray-500">{book.author}</p>
                             <div className="mt-2 flex justify-center">
                                 <BookRating count={book.stars} />
                             </div>

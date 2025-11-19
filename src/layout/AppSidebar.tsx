@@ -25,14 +25,14 @@ const navItems: NavItem[] = [
   {
     icon: <GridIcon />,
     name: "Dashboard",
-    subItems: [{ name: "Perpustakaan", path: "/admin", pro: false }],
+    subItems: [{ name: "Perpustakaan", path: "/admin/dashboard", pro: false }],
   },
   {
     name: "Data Tables",
     icon: <TableIcon />,
     subItems: [
-      { name: "Data Buku", path: "/data-buku", pro: false },
-      { name: "Data Pengguna", path: "/data-pengguna", pro: false },
+      { name: "Data Buku", path: "/admin/data-buku", pro: false },
+      { name: "Data Pengguna", path: "/admin/data-pengguna", pro: false },
     ], 
   },
   {

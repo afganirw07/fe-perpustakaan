@@ -18,13 +18,13 @@ export function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/forbidden", req.url));
     }
 
-    if (role === "petugas" && path.startsWith("/homepage")) {
+    if (role === "petugas" && path.startsWith("/user")) {
         return NextResponse.redirect(new URL("/forbidden", req.url));
     }
 
-    if (role === "superadmin" && path.startsWith("/homepage")) {
-        return NextResponse.redirect(new URL("/forbidden", req.url));
-    }
+    // if (role === "superadmin" && path.startsWith("/user")) {
+    //     return NextResponse.redirect(new URL("/forbidden", req.url));
+    // }
 
     return NextResponse.next();
 }
@@ -32,6 +32,6 @@ export function middleware(req: NextRequest) {
 export const config = {
     matcher: [
         "/admin/:path*",
-        "/users/:path*",
+        "/user/:path*",
     ],
 };
