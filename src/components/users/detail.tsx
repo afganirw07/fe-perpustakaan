@@ -12,20 +12,39 @@ import Books from "./Books";
 import FetchBooks from "@/lib/books";
 import Image from "next/image";
 
-export default function DetailBooks({ id }) {
+interface Book {
+    id: number;
+    title: string;
+    author: string;
+    publisher: string;
+    year: number;
+    isbn: string;
+    category: string;
+    description: string;
+    image: string;
+    stock: number;
+    total_pages: number;
+    language: string;
+    location_code: string;
+    condition: string;
+    is_available: boolean;
+    stars: number;
+}
 
-    const [book, setBook] = useState(null);
+interface DetailProps {
+    id: string;
+}
+
+export default function DetailBooks({ id }: DetailProps) {
+    const [book, setBook] = useState<Book | null>(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         const loadBook = async () => {
             try {
-                const allBooks = await FetchBooks();
+                const allBooks: Book[] = await FetchBooks();
                 const found = allBooks.find((b) => String(b.id) === String(id));
-
                 setBook(found || null);
-            } catch (err) {
-                console.error("Gagal load detail buku:", err);
             } finally {
                 setIsLoading(false);
             }
@@ -61,10 +80,7 @@ export default function DetailBooks({ id }) {
 
     return (
         <div className="max-w-7xl mx-auto">
-
             <div className="flex flex-col md:flex-row gap-6">
-
-                {/* Cover */}
                 <div className="md:w-1/3 flex-shrink-0">
                     <div className="aspect-[2/3] w-full mb-4 rounded-lg overflow-hidden shadow-md">
                         <Image
@@ -77,37 +93,44 @@ export default function DetailBooks({ id }) {
                     </div>
                 </div>
 
-                {/* Detail Buku */}
                 <div className="md:w-2/3">
                     <h1 className="text-2xl font-bold text-gray-900 mb-1">
                         {book.title}
                     </h1>
 
-                    <p className="text-sm text-gray-600 mb-4">
-                        {book.author}
-                    </p>
+                    <p className="text-sm text-gray-600 mb-4">{book.author}</p>
 
-                    {/* Deskripsi */}
                     <p className="text-gray-700 leading-relaxed mb-4">
                         {book.description}
                     </p>
 
                     <div className="mb-4 flex flex-wrap gap-2">
-                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
+                        <Badge
+                            variant="outline"
+                            className="bg-blue-50 text-blue-700 border-blue-300"
+                        >
                             {book.category}
                         </Badge>
-                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
+                        <Badge
+                            variant="outline"
+                            className="bg-blue-50 text-blue-700 border-blue-300"
+                        >
                             {book.publisher}
                         </Badge>
-                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
+                        <Badge
+                            variant="outline"
+                            className="bg-blue-50 text-blue-700 border-blue-300"
+                        >
                             {book.author}
                         </Badge>
-                        <Badge variant="outline" className="bg-blue-50 text-blue-700 border-blue-300">
+                        <Badge
+                            variant="outline"
+                            className="bg-blue-50 text-blue-700 border-blue-300"
+                        >
                             {book.language}
                         </Badge>
                     </div>
 
-                    {/* Tabel Detail */}
                     <Table className="border-t border-gray-200">
                         <TableBody>
                             {bookDetails.map((detail, index) => (
