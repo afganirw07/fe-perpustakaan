@@ -6,6 +6,8 @@ import { toast } from "sonner";
 import FetchBooks from "@/lib/books";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useSearch } from "@/context/SearchContext";
+
 
 
 interface Book {
@@ -45,12 +47,24 @@ const BookRating = ({ count }: BookRatingProps) => {
     );
 };
 
+
 export default function Books() {
     const router = useRouter();
 
     const [books, setBooks] = useState<Book[]>([]);
     const [wishlist, setWishlist] = useState<Set<number>>(new Set());
     const [error, setError] = useState<string | null>(null);
+    const { query } = useSearch();
+
+    const filteredBooks = books.filter((book) => {
+        if (!query) return true;
+        const q = query.toLowerCase();
+        return (
+            book.title.toLowerCase().includes(q) ||
+            book.author.toLowerCase().includes(q)
+        );
+    });
+
 
     function getCookie(name: string): string | undefined {
         const value = `; ${document.cookie}`;
@@ -88,7 +102,7 @@ export default function Books() {
         bookId: number,
         e: React.MouseEvent<HTMLDivElement>
     ) => {
-        e.stopPropagation(); 
+        e.stopPropagation();
 
         const userId = getCookie("user_id");
         if (!userId) return;
@@ -116,11 +130,12 @@ export default function Books() {
             toast.error("Gagal memperbarui status favorite");
         }
     };
+    
 
     return (
         <div>
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-6">
-                {books.map((book) => (
+                {filteredBooks.map((book) => (
                     <div
                         key={book.id}
                         className="group cursor-pointer text-center"
@@ -142,8 +157,8 @@ export default function Books() {
                             >
                                 <Heart
                                     className={`transition-colors duration-300 ${wishlist.has(book.id)
-                                            ? "text-red-500 fill-red-500"
-                                            : "text-black"
+                                        ? "text-red-500 fill-red-500"
+                                        : "text-black"
                                         }`}
                                 />
                             </div>

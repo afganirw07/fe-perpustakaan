@@ -1,10 +1,11 @@
 "use client";
 
 import { SidebarProvider, useSidebar } from "@/context/SidebarContext";
-import AppHeader from "@/layout/AppHeader";
+import AppHeader from "@/layout/AppHeaderUser";
 import AppSidebar from "@/layout/AppSidebarUser";
 import Backdrop from "@/layout/Backdrop";
 import React from "react";
+import { SearchProvider } from "@/context/SearchContext";
 
 export default function AdminLayout({
     children,
@@ -13,7 +14,9 @@ export default function AdminLayout({
 }) {
     return (
         <SidebarProvider>
-            <AdminLayoutContent>{children}</AdminLayoutContent>
+            <SearchProvider>  
+                <AdminLayoutContent>{children}</AdminLayoutContent>
+            </SearchProvider>
         </SidebarProvider>
     );
 }
@@ -25,7 +28,6 @@ function AdminLayoutContent({
 }) {
     const { isExpanded, isHovered, isMobileOpen } = useSidebar();
 
-    // Dynamic class for main content margin based on sidebar state
     const mainContentMargin = isMobileOpen
         ? "ml-0"
         : isExpanded || isHovered
@@ -34,17 +36,14 @@ function AdminLayoutContent({
 
     return (
         <div className="min-h-screen xl:flex">
-            {/* Sidebar and Backdrop */}
             <AppSidebar />
             <Backdrop />
-            {/* Main Content Area */}
-            <div
-                className={`flex-1 transition-all  duration-300 ease-in-out ${mainContentMargin}`}
-            >
-                {/* Header */}
+
+            <div className={`flex-1 transition-all duration-300 ease-in-out ${mainContentMargin}`}>
                 <AppHeader />
-                {/* Page Content */}
-                <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">{children}</div>
+                <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
+                    {children}
+                </div>
             </div>
         </div>
     );
