@@ -44,7 +44,7 @@ const HeroSection = () => {
                     </h1>
 
                     <p className="mt-6 max-w-[60ch] xs:text-lg text-gray-600">
-                        Akses ribuan koleksi buku, e-book, dan ruang literasi modern.
+                        Akses ribuan koleksi buku dan ruang literasi modern.
                         Pinjam, baca, dan temukan komunitas pembaca dari seluruh Indonesia.
                     </p>
 

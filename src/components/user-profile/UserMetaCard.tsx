@@ -1,15 +1,16 @@
 "use client";
 import React from "react";
 import { useModal } from "../../hooks/useModal";
-import { Modal } from "../ui/modal";
-import Button from "../ui/button/Button";
-import Input from "../form/input/InputField";
-import Label from "../form/Label";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
 
-
+const getCookie = (name: string): string | undefined => {
+  if (typeof document === 'undefined') return undefined;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return decodeURIComponent(parts.pop()?.split(';').shift() || '');
+};
 export default function UserMetaCard() {
   const { isOpen, openModal, closeModal } = useModal();
   const [name, setName] = useState("");
@@ -18,8 +19,8 @@ export default function UserMetaCard() {
 
   useEffect(() => {
     setIsClient(true);
-    const userName = sessionStorage.getItem("full_name");
-    const userEmail = sessionStorage.getItem("email");
+    const userName = getCookie("full_name");
+    const userEmail = getCookie("email");
 
     if (userName) {
       setName(userName);
@@ -28,13 +29,6 @@ export default function UserMetaCard() {
       setEmail(userEmail);
     }
   }, []);
-
-  const handleSave = () => {
-    sessionStorage.setItem("name", name);
-    sessionStorage.setItem("email", email);
-    console.log("Saving changes...");
-    closeModal();
-  };
 
   const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);

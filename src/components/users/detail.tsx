@@ -11,6 +11,10 @@ import Badge from "../ui/badge/Badge";
 import Books from "./Books";
 import FetchBooks from "@/lib/books";
 import Image from "next/image";
+import { Button } from "../ui/button/Navbutton";
+import { Heart, BookOpenCheck } from "lucide-react";
+import { addUserFavorite, readFavorite, deleteFavorite } from "@/lib/favorite";
+import { toast } from "sonner";
 
 interface Book {
     id: number;
@@ -38,6 +42,57 @@ interface DetailProps {
 export default function DetailBooks({ id }: DetailProps) {
     const [book, setBook] = useState<Book | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [wishlist, setWishlist] = useState<Set<number>>(new Set());
+
+    function getCookie(name: string): string | undefined {
+        if (typeof document === 'undefined') return undefined;
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop()?.split(";")[0];
+    }
+
+    useEffect(() => {
+        const loadFavorites = async () => {
+            const userId = getCookie("user_id");
+            if (userId) {
+                try {
+                    const favorites = await readFavorite(userId);
+                    const favoriteBookIds = favorites.map((fav: { book_id: number }) => fav.book_id);
+                    setWishlist(new Set(favoriteBookIds));
+                } catch (err) {
+                    console.error("Gagal memuat favorit:", err);
+                }
+            }
+        };
+        loadFavorites();
+    }, []);
+
+    const toggleFavorite = async (bookId: number) => {
+        const userId = getCookie("user_id");
+        if (!userId) {
+            toast.error("Anda harus login untuk menambahkan favorit.");
+            return;
+        }
+
+        const isFavorite = wishlist.has(bookId);
+        const newWishlist = new Set(wishlist);
+
+        try {
+            if (isFavorite) {
+                await deleteFavorite({ user_id: userId, book_id: bookId });
+                newWishlist.delete(bookId);
+                toast.success("Berhasil dihapus dari favorit");
+            } else {
+                await addUserFavorite({ user_id: userId, book_id: bookId });
+                newWishlist.add(bookId);
+                toast.success("Berhasil ditambahkan ke favorit");
+            }
+            setWishlist(newWishlist);
+        } catch (err) {
+            console.error("Gagal memperbarui favorit:", err);
+            toast.error("Gagal memperbarui status favorit.");
+        }
+    };
 
     useEffect(() => {
         const loadBook = async () => {
@@ -148,8 +203,22 @@ export default function DetailBooks({ id }: DetailProps) {
                             ))}
                         </TableBody>
                     </Table>
+                    <div className="flex flex-row gap-6 py-7">
+                        <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150 ease-in-out">
+                            <BookOpenCheck className="mr-2 h-4 w-4" /> Pinjam
+                        </Button>
+                        <Button
+                            onClick={() => toggleFavorite(book.id)}
+                            className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150 ease-in-out"
+                        >
+                            <Heart className={`mr-2 h-4 w-4 transition-colors duration-300 ${wishlist.has(book.id) ? "fill-white" : ""
+                                }`} />
+                            Favorit
+                        </Button>
+                    </div>
                 </div>
             </div>
+
 
             <div className="mt-3">
                 <h2 className="text-xl font-semibold text-gray-900 mb-3">

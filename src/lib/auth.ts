@@ -13,18 +13,19 @@ export async function registerUser(data: {
 }
 
 export async function loginUser(email: string, password: string) {
+    const oneWeek = 6048000;
+
     const res = await apiFetch("/api/auth/login", {
         method: "POST",
         body: JSON.stringify({ email, password }),
     });
 
     if (res.access_token) {
-        document.cookie = `access_token=${res.access_token}; Path=/; Max-Age=86400;`;
-        document.cookie = `role=${res.role_user}; Path=/; Max-Age=86400;`;
-        document.cookie = `user_id=${res.user_id}; Path=/; Max-Age=86400;`;
-
-        sessionStorage.setItem("full_name", res.full_name);
-        sessionStorage.setItem("email", res.email);
+        document.cookie = `access_token=${res.access_token}; Path=/; Max-Age=${oneWeek};`;
+        document.cookie = `role=${res.role_user}; Path=/; Max-Age=${oneWeek};`;
+        document.cookie = `user_id=${res.user_id}; Path=/; Max-Age=${oneWeek};`;
+        document.cookie = `email=${res.email}; Path=/; Max-Age=${oneWeek};`;
+        document.cookie = `full_name=${res.full_name}; Path=/; Max-Age=${oneWeek};`;
     }
 
     return res;

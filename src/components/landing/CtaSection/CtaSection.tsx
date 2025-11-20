@@ -21,7 +21,7 @@ const CTASection = () => {
                     </h2>
 
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-8 text-center">
-                        Akses ribuan buku, e-jurnal, dan karya ilmiah hanya dengan satu klik.
+                        Akses ribuan buku, jurnal, dan karya ilmiah hanya dengan satu klik.
                         Temukan dunia pengetahuan di ujung jarimu gratis dan tanpa batas.
                     </p>
                 </div>

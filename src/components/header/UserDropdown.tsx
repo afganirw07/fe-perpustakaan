@@ -5,6 +5,13 @@ import { Dropdown } from "../ui/dropdown/Dropdown";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
 import { useState, useEffect } from "react";
 
+const getCookie = (name: string): string | undefined => {
+  if (typeof document === 'undefined') return undefined;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return decodeURIComponent(parts.pop()?.split(';').shift() || '');
+};
+
 export default function UserDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [name, setName] = useState("");
@@ -12,8 +19,8 @@ export default function UserDropdown() {
 
 
   useEffect(() => {
-    const userName = sessionStorage.getItem("full_name");
-    const userEmail = sessionStorage.getItem("email");
+    const userName = getCookie("full_name");
+    const userEmail = getCookie("email");
     if (userName && userEmail) {
       setName(userName);
       setEmail(userEmail);

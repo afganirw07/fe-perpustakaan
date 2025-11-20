@@ -6,7 +6,12 @@ import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
 import { useEffect } from "react";
-
+const getCookie = (name: string): string | undefined => {
+  if (typeof document === 'undefined') return undefined;
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return decodeURIComponent(parts.pop()?.split(';').shift() || '');
+};
 export default function UserInfoCard() {
   const { isOpen, openModal, closeModal } = useModal();
   const [name, setName] = React.useState("");
@@ -14,8 +19,8 @@ export default function UserInfoCard() {
 
 
   useEffect(() => {
-    const userName = sessionStorage.getItem("full_name");
-    const userEmail = sessionStorage.getItem("email");
+    const userName = getCookie("full_name");
+    const userEmail = getCookie("email");
 
     if (userName) {
       setName(userName);
