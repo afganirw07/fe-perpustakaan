@@ -15,6 +15,7 @@ import { Button } from "../ui/button/Navbutton";
 import { Heart, BookOpenCheck } from "lucide-react";
 import { addUserFavorite, readFavorite, deleteFavorite } from "@/lib/favorite";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface Book {
     id: number;
@@ -43,6 +44,8 @@ export default function DetailBooks({ id }: DetailProps) {
     const [book, setBook] = useState<Book | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [wishlist, setWishlist] = useState<Set<number>>(new Set());
+    const router = useRouter();
+
 
     function getCookie(name: string): string | undefined {
         if (typeof document === 'undefined') return undefined;
@@ -204,9 +207,13 @@ export default function DetailBooks({ id }: DetailProps) {
                         </TableBody>
                     </Table>
                     <div className="flex flex-row gap-6 py-7">
-                        <Button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150 ease-in-out">
+                        <Button
+                            onClick={() => router.push(`/user/peminjaman?book_id=${book.id}`)}
+                            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150 ease-in-out"
+                        >
                             <BookOpenCheck className="mr-2 h-4 w-4" /> Pinjam
                         </Button>
+
                         <Button
                             onClick={() => toggleFavorite(book.id)}
                             className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-150 ease-in-out"

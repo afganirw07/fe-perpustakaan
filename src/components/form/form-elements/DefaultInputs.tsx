@@ -1,120 +1,193 @@
 "use client";
-import React, { useState } from 'react';
-import ComponentCard from '../../common/ComponentCard';
-import Label from '../Label';
-import Input from '../input/InputField';
-import Select from '../Select';
-import { ChevronDownIcon, EyeCloseIcon, EyeIcon, TimeIcon } from '../../../icons';
-import DatePicker from '@/components/form/date-picker';
 
-export default function DefaultInputs() {
-  const [showPassword, setShowPassword] = useState(false);
-  const options = [
-    { value: "marketing", label: "Marketing" },
-    { value: "template", label: "Template" },
-    { value: "development", label: "Development" },
-  ];
-  const handleSelectChange = (value: string) => {
-    console.log("Selected value:", value);
-  };
+import React, { useEffect, useState } from "react";
+import ComponentCard from "../../common/ComponentCard";
+import Label from "../Label";
+import Input from "../input/InputField";
+import DatePicker from "@/components/form/date-picker";
+import { Button } from "@/components/ui/button/Navbutton";
+import FetchBooks from "@/lib/books";
+import { createPeminjaman } from "@/lib/peminjaman";
+import { z } from "zod";
+import { toast } from "sonner";
+import { Send } from "lucide-react";
+import Image from "next/image";
+
+const BookPreview = ({ book }) => {
+  if (!book) return null;
+
   return (
-    <ComponentCard title="Default Inputs">
-      <div className="space-y-6">
-        <div>
-          <Label>Input</Label>
-          <Input type="text" />
-        </div>
-        <div>
-          <Label>Input with Placeholder</Label>
-          <Input type="text" placeholder="info@gmail.com" />
-        </div>
-        <div>
-          <Label>Select Input</Label>
-          <div className="relative">
-            <Select
-            options={options}
-            placeholder="Select an option"
-            onChange={handleSelectChange}
-            className="dark:bg-dark-900"
-          />
-             <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
-              <ChevronDownIcon/>
-            </span>
-          </div>
-        </div>
-        <div>
-          <Label>Password Input</Label>
-          <div className="relative">
-            <Input
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-            />
-            <button
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-            >
-              {showPassword ? (
-                <EyeIcon className="fill-gray-500 dark:fill-gray-400" />
-              ) : (
-                <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400" />
-              )}
-            </button>
-          </div>
-        </div>
+    <div className="mb-8 p-6 transition duration-300">
+      <h3 className="text-xl font-bold text-gray-800 border-b pb-2 mb-4">
+        Detail Buku
+      </h3>
+
+      <div className="flex flex-col sm:flex-row gap-6 items-start">
+        <Image
+          width={200}
+          height={300}
+          src={book.image}
+          alt={book.title}
+          className="w-32 h-48 object-cover rounded-md shadow-md border border-gray-200"
+        />
 
         <div>
-          <DatePicker
-            id="date-picker"
-            label="Date Picker Input"
-            placeholder="Select a date"
-            onChange={(dates, currentDateString) => {
-              // Handle your logic
-              console.log({ dates, currentDateString });
-            }}
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="tm">Time Picker Input</Label>
-          <div className="relative">
-            <Input
-              type="time"
-              id="tm"
-              name="tm"
-              onChange={(e) => console.log(e.target.value)}
-            />
-            <span className="absolute text-gray-500 -translate-y-1/2 pointer-events-none right-3 top-1/2 dark:text-gray-400">
-              <TimeIcon />
-            </span>
-          </div>
-        </div>
-        <div>
-          <Label htmlFor="tm">Input with Payment</Label>
-          <div className="relative">
-            <Input
-              type="text"
-              placeholder="Card number"
-              className="pl-[62px]"
-            />
-            <span className="absolute left-0 top-1/2 flex h-11 w-[46px] -translate-y-1/2 items-center justify-center border-r border-gray-200 dark:border-gray-800">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 20 20"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <circle cx="6.25" cy="10" r="5.625" fill="#E80B26" />
-                <circle cx="13.75" cy="10" r="5.625" fill="#F59D31" />
-                <path
-                  d="M10 14.1924C11.1508 13.1625 11.875 11.6657 11.875 9.99979C11.875 8.33383 11.1508 6.8371 10 5.80713C8.84918 6.8371 8.125 8.33383 8.125 9.99979C8.125 11.6657 8.84918 13.1625 10 14.1924Z"
-                  fill="#FC6020"
-                />
-              </svg>
-            </span>
-          </div>
+          <p className="text-2xl font-extrabold text-gray-900">{book.title}</p>
+          <p className="text-md text-gray-600 italic mt-1">Oleh: {book.author}</p>
+          <p className="text-sm mt-4 text-gray-700">{book.description}</p>
         </div>
       </div>
+    </div>
+  );
+};
+
+export default function DefaultInputs({ preselectedBookId }) {
+  const [form, setForm] = useState({
+    full_name: "",
+    address: "",
+    tanggal_peminjaman: "",
+    tanggal_pengembalian: "",
+  });
+
+  const [errors, setErrors] = useState({});
+  const [book, setBook] = useState(null);
+
+  // zod
+  const borrowingSchema = z.object({
+    full_name: z.string().min(1, "Nama lengkap wajib diisi."),
+    address: z.string().min(1, "Alamat wajib diisi."),
+    tanggal_peminjaman: z.string().min(1, "Tanggal peminjaman wajib diisi.").refine((date) => !isNaN(new Date(date).getTime()), "Format tanggal peminjaman tidak valid."),
+    tanggal_pengembalian: z.string().min(1, "Tanggal pengembalian wajib diisi.").refine((date) => !isNaN(new Date(date).getTime()), "Format tanggal pengembalian tidak valid."),
+  }).refine((data) => {
+    const borrowDate = new Date(data.tanggal_peminjaman);
+    const returnDate = new Date(data.tanggal_pengembalian);
+    return returnDate >= borrowDate;
+  }, {
+    message: "Tanggal pengembalian harus setelah atau sama dengan tanggal peminjaman.",
+    path: ["tanggal_pengembalian"],
+  });
+
+  useEffect(() => {
+    const loadBook = async () => { 
+      if (!preselectedBookId) return;
+
+      const allBooks = await FetchBooks();
+      const found = allBooks.find((b) => String(b.id) === String(preselectedBookId));
+      setBook(found);
+    };
+
+    loadBook();
+  }, [preselectedBookId]);
+
+  const handleChange = (field, value) => {
+    setErrors((prev) => ({ ...prev, [field]: undefined })); 
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+
+  // peminjaman
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setErrors({}); 
+
+    try {
+      borrowingSchema.parse(form);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        const newErrors = {};
+        error.errors.forEach((err) => (newErrors[err.path[0]] = err.message));
+        setErrors(newErrors);
+        return;
+      }
+    }
+
+    const user_id = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("user_id="))
+      ?.split("=")[1];
+
+    if (!user_id) {
+      toast.error("Anda harus login untuk mengajukan peminjaman.");
+      return;
+    }
+
+    const payload = {
+      user_id,
+      book_id: Number(preselectedBookId),
+      full_name: form.full_name,
+      address: form.address,
+      tanggal_peminjaman: form.tanggal_peminjaman,
+      tanggal_pengembalian: form.tanggal_pengembalian,
+      status: "pending",
+    };
+
+    const res = await createPeminjaman(payload);
+    if (res.success) {
+      toast.success("Peminjaman berhasil! Tunggu konfirmasi admin");
+    } else {
+      toast.error(res.message || "Gagal mengirim form!");
+    }
+  };
+
+  return (
+    <ComponentCard title="Form Pengajuan Peminjaman Buku">
+      <BookPreview book={book} />
+
+      <form onSubmit={handleSubmit} className="space-y-8 p-6">
+        <h3 className="text-xl font-bold text-gray-800 border-b pb-2">
+          Data Peminjam
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <Label className="font-semibold text-gray-700">Nama Lengkap</Label>
+            <Input
+              value={form.full_name}
+              onChange={(e) => handleChange("full_name", e.target.value)}
+            />
+            {errors.full_name && <p className="text-red-500 text-sm mt-1">{errors.full_name}</p>}
+          </div>
+
+          <div>
+            <Label className="font-semibold text-gray-700">Alamat</Label>
+            <Input
+              value={form.address}
+              onChange={(e) => handleChange("address", e.target.value)}
+            />
+            {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
+          </div>
+        </div>
+
+        <h3 className="text-xl font-bold text-gray-800 border-b pb-2 pt-4">
+          Detail Peminjaman
+        </h3>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <DatePicker
+            id="tanggal_peminjaman"
+            label="Tanggal Peminjaman"
+            onChange={(dates, dateStr) => handleChange("tanggal_peminjaman", dateStr)}            
+          />
+          {errors.tanggal_peminjaman && <p className="text-red-500 text-sm mt-1">{errors.tanggal_peminjaman}</p>}
+
+          <DatePicker
+            id="tanggal_pengembalian"
+            label="Tanggal Pengembalian"
+            onChange={(dates, dateStr) => handleChange("tanggal_pengembalian", dateStr)}            
+          />
+          {errors.tanggal_pengembalian && <p className="text-red-500 text-sm mt-1">{errors.tanggal_pengembalian}</p>}
+        </div>
+
+        <div className="pt-4">
+          <Button
+            type="submit"
+            className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-3 font-bold text-white transition-all duration-300 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          >
+            <Send className="h-5 w-5" />
+            Ajukan Peminjaman
+          </Button>
+        </div>
+      </form>
     </ComponentCard>
   );
 }

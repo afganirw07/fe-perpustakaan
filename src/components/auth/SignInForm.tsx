@@ -29,6 +29,15 @@ export function LoginForm({
     password: z.string().min(8, "Kata sandi harus terdiri dari minimal 8 karakter"),
   })
 
+  // get cookie
+  function getCookie(name: string): string | undefined {
+    if (typeof document === "undefined") return undefined;
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop()?.split(";")[0];
+  }
+
+
   // handle login
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -50,12 +59,19 @@ export function LoginForm({
     }
 
     try {
+      const userRole = getCookie("role")
       const { email, password } = validationResult.data;
       await loginUser(email, password);
       toast.success("Berhasil masuk");
-      setTimeout(() => {
-        router.push("/user/homepage");
-      }, 2000);
+      if (userRole === "petugas") {
+        setTimeout(() => {
+          router.push("/admin/dashboard");
+        }, 2000);
+      } else {
+        setTimeout(() => {
+          router.push("/user/homepage");
+        }, 2000);
+      }
     } catch (err) {
       console.error("Gagal masuk:", err);
       toast.error(`Gagal masuk: ${err instanceof Error ? err.message : String(err)}`);

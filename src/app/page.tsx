@@ -1,7 +1,9 @@
-import React from "react";
+"use client";
+
+import React, { useEffect } from "react";
 import { Navbar } from "@/components/landing/navbar";
 import HeroSection from "@/components/landing/HeroSection/hero";
-import Testimonial from "@/components/landing//testi/testimonial";
+import Testimonial from "@/components/landing/testi/testimonial";
 import Footer from "@/components/landing/footer/footer";
 import FAQ from "@/components/landing/HowItWorks/HowItWorks";
 import CTASection from "@/components/landing/CtaSection/CtaSection";
@@ -11,7 +13,8 @@ import Abouts from "@/components/landing/About/About";
 
 export default function Homepage() {
 
-    return(
+
+    return (
         <div>
             <Navbar />
             <HeroSection />

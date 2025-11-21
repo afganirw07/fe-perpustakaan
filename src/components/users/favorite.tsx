@@ -56,6 +56,7 @@ export default function FavoriteBook() {
                 const data: Book[] = await readFavoriteLikes(userId);
                 setBooks(data || []);
             } catch (err) {
+                console.error("Gagal memuat data:", err);
                 setError("Gagal memuat data. Silakan coba lagi.");
                 setBooks([]);
             } finally {
@@ -75,6 +76,7 @@ export default function FavoriteBook() {
             toast.success("Berhasil dihapus dari favorite");
             setBooks((prev) => prev.filter((book) => book.id !== bookId));
         } catch (err) {
+            console.error("Gagal menghapus data:", err);
             toast.error("Gagal menghapus data");
         }
     };

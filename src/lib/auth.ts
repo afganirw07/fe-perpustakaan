@@ -32,6 +32,20 @@ export async function loginUser(email: string, password: string) {
 }
 
 
-export default async function FetchUsers() {
+export async function FetchUsers() {
     return apiFetch("/api/users");
+}
+
+export default async function editUsers(user_id: string, name: string, email: string) {
+    return apiFetch(`/api/users/${user_id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            full_name: name,
+            email: email
+        })
+        ,
+    });
 }

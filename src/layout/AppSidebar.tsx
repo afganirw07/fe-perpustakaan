@@ -36,20 +36,25 @@ const navItems: NavItem[] = [
     ], 
   },
   {
+    icon: <TableIcon />,
+    name: "Peminjaman",
+    path: "/admin/peminjaman",
+  },
+  {
     icon: <CalenderIcon />,
     name: "Kalender",
-    path: "/calendar",
+    path: "/admin/calendar",
   },
   {
     icon: <UserCircleIcon />,
     name: "Admin Profile",
-    path: "/profile",
+    path: "/admin/profile",
   },
 
   {
     name: "Forms",
     icon: <ListIcon />,
-    subItems: [{ name: "Nambah Buku", path: "/form-elements", pro: false }],
+    subItems: [{ name: "Nambah Buku", path: "/admin/form-elements", pro: false }],
   },
 ];
 
