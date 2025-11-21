@@ -11,7 +11,7 @@ import {
 import { useState, useEffect } from "react";
 import { Button } from "../ui/button/Navbutton";
 import { Edit, Trash2 } from "lucide-react";
-import FetchUsers from "@/lib/auth";
+import {FetchUsers} from "@/lib/auth";
 
 interface User {
     id: number;

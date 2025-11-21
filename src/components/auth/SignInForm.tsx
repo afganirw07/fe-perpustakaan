@@ -29,13 +29,13 @@ export function LoginForm({
     password: z.string().min(8, "Kata sandi harus terdiri dari minimal 8 karakter"),
   })
 
-  // get cookie
-  function getCookie(name: string): string | undefined {
-    if (typeof document === "undefined") return undefined;
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop()?.split(";")[0];
-  }
+  // // get cookie
+  // function getCookie(name: string): string | undefined {
+  //   if (typeof document === "undefined") return undefined;
+  //   const value = `; ${document.cookie}`;
+  //   const parts = value.split(`; ${name}=`);
+  //   if (parts.length === 2) return parts.pop()?.split(";")[0];
+  // }
 
 
   // handle login
@@ -59,18 +59,14 @@ export function LoginForm({
     }
 
     try {
-      const userRole = getCookie("role")
       const { email, password } = validationResult.data;
-      await loginUser(email, password);
+      const result = await loginUser(email, password);
+      // console.log("===================================", result);
       toast.success("Berhasil masuk");
-      if (userRole === "petugas") {
-        setTimeout(() => {
-          router.push("/admin/dashboard");
-        }, 2000);
+      if (result.role_user === "petugas") {
+        router.push("/admin/dashboard");
       } else {
-        setTimeout(() => {
-          router.push("/user/homepage");
-        }, 2000);
+        router.push("/user/homepage");
       }
     } catch (err) {
       console.error("Gagal masuk:", err);

@@ -31,14 +31,25 @@ export default function UserInfoCard() {
     const userName = getCookie("full_name");
     const userEmail = getCookie("email");
 
+    console.log("COOKIE user_id:", id);
+    console.log("COOKIE full_name:", userName);
+    console.log("COOKIE email:", userEmail);
+
     if (id) setUserId(id);
     if (userName) setName(userName);
     if (userEmail) setEmail(userEmail);
   }, []);
 
+
   const handleSave = async () => {
     try {
       await editUsers(userId, name, email);
+
+      if (!userId) {
+        toast.error("User ID tidak ditemukan");
+        return;
+      }
+
       toast.success("Berhasil update");
 
       document.cookie = `full_name=${name}; Path=/; Max-Age=604800; SameSite=Lax;`;
@@ -46,7 +57,7 @@ export default function UserInfoCard() {
 
       router.refresh();
 
-      closeModal(); 
+      closeModal();
     } catch (err) {
       toast.error("Gagal update");
       console.log("Gagal update:", err);
@@ -135,7 +146,7 @@ export default function UserInfoCard() {
               <Button size="sm" variant="outline" onClick={closeModal}>
                 Tutup
               </Button>
-              <Button  size="sm" type="submit" >
+              <Button size="sm" type="submit" >
                 Simpan Perubahan
               </Button>
 
