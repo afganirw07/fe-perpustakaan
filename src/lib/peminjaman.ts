@@ -60,12 +60,31 @@ export async function updatePeminjamanStatus(
             message: res.message,
             data: res.data,
         };
-    } catch (err : any) {
+    } catch (err: any) {
         return {
             success: false,
             message: err.message || "Gagal update status",
         };
     }
+}
+
+export async function readUserPeminjaman(user_id: string) {
+    try {
+        const res = await apiFetch(`/api/peminjaman/${user_id}`, {
+            method: "GET",
+        });
+
+        return {
+            success: true,
+            data: res,
+        };
+    } catch (err: any) {
+        return {
+            success: false,
+            message: err.message || "Gagal mengambil data peminjaman user",
+        };
+    }
+
 }
 
 export async function readAllPeminjaman() {
@@ -84,4 +103,9 @@ export async function readAllPeminjaman() {
             message: err.message || "Gagal mengambil semua peminjaman",
         };
     }
+}
+
+
+export async function readUserPeminjamanDetail(id: string) {
+    return apiFetch(`/api/peminjaman/${id}`);
 }
