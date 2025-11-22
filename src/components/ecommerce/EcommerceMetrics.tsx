@@ -1,27 +1,53 @@
 "use client";
 import React from "react";
 import Badge from "../ui/badge/Badge";
-import { ArrowUpIcon, BoxIconLine, GroupIcon } from "@/icons";
+import { ArrowUpIcon, GroupIcon } from "@/icons";
 import { FetchUsers } from "@/lib/auth";
 import { useState, useEffect } from "react";
 import { readAllPeminjaman } from "@/lib/peminjaman";
 import { Book } from "lucide-react";
 
+interface User {
+  id: number;
+  full_name: string;
+  email: string;
+  password: string;
+  role_user: string;
+}
+
+interface Peminjaman {
+  id: string;
+  user_id: string;
+  book_id: number;
+  full_name: string;
+
+}
 
 export const EcommerceMetrics = () => {
-  const [tableData, setTableData] = useState<any[]>([]);
-  const [totalPeminjaman, setTotalPeminjaman] = useState<any[]>([]);
+  const [tableData, setTableData] = useState<User[]>([]);
+  const [totalPeminjaman, setTotalPeminjaman] = useState<Peminjaman[]>([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     const FetchData = async () => {
-      const data = await FetchUsers();
-      const peminjaman = await readAllPeminjaman();
-      setTotalPeminjaman(peminjaman.data);
-
-      setTableData(data);
-    }
+      try {
+        const data = await FetchUsers();
+        const peminjaman = await readAllPeminjaman();
+        setTotalPeminjaman(peminjaman.data);
+  
+        setTableData(data);
+      } catch (error) {
+        console.error("Gagal mengambil data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
     FetchData();
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
 
   return (

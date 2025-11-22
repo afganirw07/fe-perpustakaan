@@ -261,7 +261,7 @@ const AppSidebar: React.FC = () => {
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="py-8 flex justify-center items-center">
-        <Link href="/admin">
+        <Link href="/admin/dashboard">
           <>
             <Image
               className="dark:hidden"
