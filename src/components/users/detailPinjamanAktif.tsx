@@ -6,15 +6,24 @@ import Label from "../form/Label";
 import { Button } from "@/components/ui/button/Navbutton";
 import { readUserPeminjaman, updatePeminjamanStatus } from "@/lib/peminjaman";
 import { toast } from "sonner";
-import { ArrowLeft, Undo2  } from "lucide-react";
+import { ArrowLeft, Undo2, Star } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Badge from "../ui/badge/Badge";
-// import { Modal } from "../ui/modal";
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog/dialog"
+import { createReview } from "@/lib/ulasan";
 
 interface BorrowRequest {
     id: string;
     user_id: string;
+    book_id: number;
     full_name: string;
     address: string;
     tanggal_peminjaman: string;
@@ -31,6 +40,9 @@ interface BorrowRequest {
 export default function DetailPeminjamanAktif({ peminjamanId }: { peminjamanId: string }) {
     const [peminjaman, setPeminjaman] = useState<BorrowRequest | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [rating, setRating] = useState(0);
+    const [comment, setComment] = useState("");
 
     const router = useRouter();
 
@@ -54,7 +66,7 @@ export default function DetailPeminjamanAktif({ peminjamanId }: { peminjamanId: 
             if (response.success && Array.isArray(response.data)) {
                 const detailData = response.data.find((p: BorrowRequest) => p.id === peminjamanId);
                 setPeminjaman(detailData || null);
-                console.log("======================TESSSS============================",detailData);
+                console.log("======================TESSSS============================", detailData);
             } else {
                 toast.error("Data peminjaman tidak ditemukan.");
             }
@@ -64,20 +76,37 @@ export default function DetailPeminjamanAktif({ peminjamanId }: { peminjamanId: 
         loadDetail();
     }, [peminjamanId, router]);
 
-    const handleReturnBook = async () => {
+    const handleSubmitReviewAndReturn = async () => {
+        if (rating === 0 || comment.trim() === "") {
+            toast.error("Rating dan ulasan tidak boleh kosong.");
+            return;
+        }
         if (!peminjaman) return;
 
-        const res = await updatePeminjamanStatus(peminjaman.id, "dikembalikan");
+        try {
+            await createReview({
+                borrow_id: peminjaman.id,   
+                user_id: peminjaman.user_id,
+                book_id: peminjaman.book_id,
+                rating: rating,
+                review_text: comment,       
+            });
 
-        if (res.success) {
-            toast.success("Buku berhasil dikembalikan.");
-            router.refresh();
-        } else {
-            toast.error("Gagal mengembalikan buku.");
+
+            const returnRes = await updatePeminjamanStatus(peminjaman.id, "dikembalikan");
+            if (returnRes.success) {
+                toast.success("Ulasan berhasil dikirim dan buku telah dikembalikan.");
+                setIsModalOpen(false);
+                router.push('user/homepage');
+            } else {
+                toast.error("Gagal mengembalikan buku setelah mengirim ulasan.");
+            }
+        } catch (error) {
+            toast.error("Terjadi kesalahan saat mengirim ulasan.");
+            console.error("============================================s", error);
         }
     };
 
-    // LOADING
     if (isLoading) {
         return <ComponentCard>Memuat detail peminjaman...</ComponentCard>;
     }
@@ -122,10 +151,10 @@ export default function DetailPeminjamanAktif({ peminjamanId }: { peminjamanId: 
                                     peminjaman.status === "disetuju"
                                         ? "success"
                                         : peminjaman.status === "pending"
-                                        ? "warning"
-                                        : peminjaman.status === "dikembalikan"
-                                        ? "info"
-                                        : "error"
+                                            ? "warning"
+                                            : peminjaman.status === "dikembalikan"
+                                                ? "info"
+                                                : "error"
                                 }
                             >
                                 {peminjaman.status}
@@ -183,14 +212,54 @@ export default function DetailPeminjamanAktif({ peminjamanId }: { peminjamanId: 
 
                 {/* Tombol Kembalikan Buku (user only) */}
                 {peminjaman.status === "disetuju" && (
-                    <div className="flex justify-end pt-4 border-t">
-                        <Button
-                            onClick={handleReturnBook}
-                            className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2"
-                        >
-                            <Undo2  className="h-4 w-4" /> Kembalikan Buku
-                        </Button>
-                    </div>
+                    <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+                        <DialogTrigger asChild>
+                            <div className="flex justify-end pt-4 border-t">
+                                <Button className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2">
+                                    <Undo2 className="h-4 w-4" /> Kembalikan Buku
+                                </Button>
+                            </div>
+                        </DialogTrigger>
+                        <DialogContent className="sm:max-w-[425px]">
+                            <DialogHeader>
+                                <DialogTitle>Berikan Ulasan Anda</DialogTitle>
+                                <DialogDescription>
+                                    Bagaimana pendapat Anda tentang buku ini? Ulasan Anda sangat berarti.
+                                </DialogDescription>
+                            </DialogHeader>
+                            <div className="space-y-5 py-2">
+                                <div>
+                                    <Label className="font-medium">Rating</Label>
+                                    <div className="flex items-center gap-2 mt-2">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                            <Star
+                                                key={star}
+                                                className={`h-7 w-7 cursor-pointer transition-colors ${rating >= star ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+                                                onClick={() => setRating(star)}
+                                            />
+                                        ))}
+                                    </div>
+                                </div>
+                                <div>
+                                    <Label htmlFor="comment" className="font-medium">Ulasan</Label>
+                                    <textarea
+                                        id="comment"
+                                        value={comment}
+                                        onChange={(e) => setComment(e.target.value)}
+                                        placeholder="Tulis ulasan Anda di sini..."
+                                        className="w-full mt-2 p-3 border rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700 focus:ring-2 focus:ring-blue-500 transition"
+                                        rows={4}
+                                    />
+                                </div>
+                            </div>
+                            <div className="flex justify-end gap-3 pt-4 border-t">
+                                <Button variant="outline" onClick={() => setIsModalOpen(false)}>Batal</Button>
+                                <Button onClick={handleSubmitReviewAndReturn} disabled={rating === 0 || comment.trim() === ""} className="bg-blue-600 hover:bg-blue-700 text-white">
+                                    Kirim & Kembalikan
+                                </Button>
+                            </div>
+                        </DialogContent>
+                    </Dialog>
                 )}
             </div>
         </ComponentCard>

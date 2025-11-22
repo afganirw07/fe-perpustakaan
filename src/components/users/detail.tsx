@@ -16,6 +16,7 @@ import { Heart, BookOpenCheck } from "lucide-react";
 import { addUserFavorite, readFavorite, deleteFavorite } from "@/lib/favorite";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { getReviewsByBook } from "@/lib/ulasan";
 
 interface Book {
     id: number;
@@ -36,6 +37,16 @@ interface Book {
     stars: number;
 }
 
+interface Review {
+    id: string;
+    users: {
+        full_name: string;
+    };
+    rating: number;
+    review_text: string;
+    created_at: string;
+}
+
 interface DetailProps {
     id: string;
 }
@@ -43,6 +54,7 @@ interface DetailProps {
 export default function DetailBooks({ id }: DetailProps) {
     const [book, setBook] = useState<Book | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [reviews, setReviews] = useState<Review[]>([]);
     const [wishlist, setWishlist] = useState<Set<number>>(new Set());
     const router = useRouter();
 
@@ -98,17 +110,25 @@ export default function DetailBooks({ id }: DetailProps) {
     };
 
     useEffect(() => {
-        const loadBook = async () => {
+        const loadBookAndReviews = async () => {
             try {
                 const allBooks: Book[] = await FetchBooks();
                 const found = allBooks.find((b) => String(b.id) === String(id));
                 setBook(found || null);
+
+                if (found) {
+                    const reviewData = await getReviewsByBook(found.id);
+                    if (reviewData.success && Array.isArray(reviewData.data)) {
+                        setReviews(reviewData.data);
+                    }
+                    // console.log("=================DATA==============",reviewData);
+                }
             } finally {
                 setIsLoading(false);
             }
         };
 
-        loadBook();
+        loadBookAndReviews();
     }, [id]);
 
     if (isLoading) {
@@ -135,6 +155,21 @@ export default function DetailBooks({ id }: DetailProps) {
         { label: "Kondisi", value: book.condition },
         { label: "Stok", value: book.stock },
     ];
+
+    const StarRating = ({ rating }: { rating: number }) => (
+        <div className="flex items-center">
+            {[1, 2, 3, 4, 5].map((star) => (
+                <svg
+                    key={star}
+                    className={`w-5 h-5 ${star <= rating ? "text-yellow-400 fill-yellow-400" : "text-gray-300"}`}
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                >
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.53-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                </svg>
+            ))}
+        </div>
+    );
 
     return (
         <div className="max-w-7xl mx-auto">
@@ -227,14 +262,34 @@ export default function DetailBooks({ id }: DetailProps) {
             </div>
 
 
-            <div className="mt-3">
-                <h2 className="text-xl font-semibold text-gray-900 mb-3">
+            <div className="mt-8">
+                <h2 className="text-2xl font-bold text-gray-900 mb-4 border-b pb-2">
                     Ulasan
                 </h2>
 
-                <div className="bg-amber-400 rounded-lg p-4">
-                    <p className="text-gray-700">Belum ada ulasan untuk buku ini.</p>
-                </div>
+                {reviews.length > 0 ? (
+                    <div className="space-y-6">
+                        {reviews.map((review) => (
+                            <div key={review.id} className="p-4 border rounded-lg bg-white shadow-sm">
+                                <div className="flex items-center justify-between mb-2">
+                                    <p className="font-semibold text-gray-800">
+                                        {review.users?.full_name || "Pengguna Anonim"}
+                                    </p>
+
+                                    <span className="text-xs text-gray-500">
+                                        {new Date(review.created_at).toLocaleDateString()}
+                                    </span>
+                                </div>
+                                <StarRating rating={review.rating} />
+                                <p className="text-gray-700 mt-2">{review.review_text}</p>
+                            </div>
+                        ))}
+                    </div>
+                ) : (
+                    <div className="bg-yellow-500 rounded-lg p-4">
+                        <p className="text-black">Belum ada ulasan untuk buku ini.</p>
+                    </div>
+                )}
 
                 <div className="mt-6">
                     <h1 className="text-xl font-semibold text-gray-900 mb-3">
