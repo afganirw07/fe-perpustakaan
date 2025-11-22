@@ -20,7 +20,7 @@ interface BorrowRequest {
     address: string;
     tanggal_peminjaman: string;
     tanggal_pengembalian: string | null;
-    status: "pending" | "approved" | "rejected" | "returned";
+    status: "pending" | "disetuju" | "ditolak" | "dikembalikan";
     books: {
         title: string;
         description: string;
@@ -58,11 +58,11 @@ export default function DetailPeminjaman({ peminjamanId }: { peminjamanId: strin
         }
     }, [peminjamanId, router]);
 
-    const handleStatusUpdate = async (status: "approved" | "rejected") => {
+    const handleStatusUpdate = async (status: "disetuju" | "ditolak") => {
         if (!peminjaman) return;
         const res = await updatePeminjamanStatus(peminjaman.id, status);
         if (res.success) {
-            toast.success(`Peminjaman berhasil di-${status === "approved" ? "setujui" : "tolak"}`);
+            toast.success(`Peminjaman berhasil di-${status === "disetuju" ? "setujui" : "tolak"}`);
             router.push("/admin/data-peminjaman");
             router.refresh();
         } else {
@@ -106,9 +106,9 @@ export default function DetailPeminjaman({ peminjamanId }: { peminjamanId: strin
                             <Label>Status</Label>
                             <Badge
                                 color={
-                                    peminjaman.status === "approved" ? "success" :
+                                    peminjaman.status === "disetuju" ? "success" :
                                         peminjaman.status === "pending" ? "warning" :
-                                            peminjaman.status === "returned" ? "info" : "error"
+                                            peminjaman.status === "dikembalikan" ? "info" : "error"
                                 }
                             >
                                 {peminjaman.status}
@@ -149,8 +149,8 @@ export default function DetailPeminjaman({ peminjamanId }: { peminjamanId: strin
                 {/* Tombol Aksi */}
                 {peminjaman.status === "pending" && (
                     <div className="flex justify-end gap-4 pt-4 border-t">
-                        <Button onClick={() => handleStatusUpdate("rejected")} className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"><X className="h-4 w-4" /> Tolak</Button>
-                        <Button onClick={() => handleStatusUpdate("approved")} className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"><Check className="h-4 w-4" /> Setujui</Button>
+                        <Button onClick={() => handleStatusUpdate("ditolak")} className="bg-red-600 hover:bg-red-700 text-white flex items-center gap-2"><X className="h-4 w-4" /> Tolak</Button>
+                        <Button onClick={() => handleStatusUpdate("disetuju")} className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"><Check className="h-4 w-4" /> Setujui</Button>
                     </div>
                 )}
             </div>

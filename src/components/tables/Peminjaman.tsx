@@ -10,9 +10,11 @@ import {
 
 import Badge from "../ui/badge/Badge";
 import { Button } from "../ui/button/Navbutton";
-import { Check, X, Info  } from "lucide-react";
+import { Check, X, Info } from "lucide-react";
 import { readAllPeminjaman } from "@/lib/peminjaman";
 import { useRouter } from "next/navigation";
+import { updatePeminjamanStatus } from "@/lib/peminjaman";
+import { toast } from "sonner";
 
 
 interface BorrowRequest {
@@ -22,7 +24,7 @@ interface BorrowRequest {
     full_name: string;
     tanggal_peminjaman: string;
     tanggal_pengembalian: string | null;
-    status: "pending" | "approved" | "rejected" | "returned";
+    status: "pending" | "disetuju" | "ditolak" | "dikembalikan";
     books: {
         title: string;
         image: string | null;
@@ -42,6 +44,18 @@ export default function PeminjamanBuku() {
 
         FetchData();
     }, []);
+
+    const handleStatusUpdate = async (id: string, status: "disetuju" | "ditolak" | "dikembalikan") => {
+        const res = await updatePeminjamanStatus(id, status);
+        console.log(res);
+        if (res.success) {
+            toast.success(`Peminjaman berhasil ${status === "disetuju" ? "disetujui" : status}`);
+            router.refresh();
+        } else {
+            toast.error(res.message || "Gagal memperbarui status.");
+        }
+    };
+
 
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
@@ -114,13 +128,13 @@ export default function PeminjamanBuku() {
                                         <Badge
                                             size="sm"
                                             color={
-                                                p.status === "approved"
+                                                p.status === "disetuju"
                                                     ? "success"
                                                     : p.status === "pending"
-                                                    ? "warning"
-                                                    : p.status === "returned"
-                                                    ? "info"
-                                                    : "error"
+                                                        ? "warning"
+                                                        : p.status === "dikembalikan"
+                                                            ? "info"
+                                                            : "error"
                                             }
                                         >
                                             {p.status}
@@ -130,27 +144,36 @@ export default function PeminjamanBuku() {
                                     {/* Tombol Aksi */}
                                     <TableCell className="px-2 py-3">
                                         <div className="flex items-center gap-2">
-                                            <Button
-                                                variant="outline"
-                                                size="icon"
-                                                className="h-8 w-8 bg-green-600 hover:bg-green-700 text-white"
-                                            >
-                                                <Check className="h-4 w-4" />
-                                            </Button>
-
-                                            <Button
-                                                variant="outline"
-                                                size="icon"
-                                                className="h-8 w-8 bg-red-600 hover:bg-red-700 text-white"
-                                            >
-                                                <X className="h-4 w-4" />
-                                            </Button>
+                                            {p.status === "pending" && (
+                                                <>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="icon"
+                                                        className="h-8 w-8 bg-green-600 hover:bg-green-700 text-white"
+                                                        onClick={() =>
+                                                            handleStatusUpdate(p.id, "disetuju")
+                                                        }
+                                                    >
+                                                        <Check className="h-4 w-4" />
+                                                    </Button>
+                                                    <Button
+                                                        variant="outline"
+                                                        size="icon"
+                                                        className="h-8 w-8 bg-red-600 hover:bg-red-700 text-white"
+                                                        onClick={() =>
+                                                            handleStatusUpdate(p.id, "ditolak")
+                                                        }
+                                                    >
+                                                        <X className="h-4 w-4" />
+                                                    </Button>
+                                                </>
+                                            )}
                                             <Button
                                                 variant="outline"
                                                 size="icon"
                                                 className="h-8 w-8 bg-blue-600 hover:bg-blue-700 text-white"
                                                 onClick={(e) => {
-                                                    e.stopPropagation(); 
+                                                    e.stopPropagation();
                                                     router.push(`/admin/data-peminjaman/${p.id}`);
                                                     console.log(p.id);
                                                 }}

@@ -31,8 +31,8 @@ const navItems: NavItem[] = [
         icon: <ListIcon />,
         name: "Peminjaman",
         subItems: [
-            { name: "Peminjaman Aktif", path: "/peminjaman-aktif" },
-            { name: "Riwayat Peminjaman", path: "/peminjaman-riwayat" },
+            { name: "Peminjaman Aktif", path: "/user/peminjaman-aktif" },
+            { name: "Riwayat Peminjaman", path: "/user/peminjaman-riwayat" },
         ],
     },
     {

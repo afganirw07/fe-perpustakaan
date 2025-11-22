@@ -48,7 +48,7 @@ export async function getPeminjamanByUser(user_id: string) {
 
 export async function updatePeminjamanStatus(
     id: string,
-    status: "pending" | "acc" | "ditolak" | "dikembalikan"
+    status: "pending" | "disetuju" | "ditolak" | "dikembalikan"
 ) {
     try {
         const res = await apiFetch(`/api/peminjaman/status/${id}?status=${status}`, {
@@ -60,7 +60,7 @@ export async function updatePeminjamanStatus(
             message: res.message,
             data: res.data,
         };
-    } catch (err: any) {
+    } catch (err : any) {
         return {
             success: false,
             message: err.message || "Gagal update status",
