@@ -4,18 +4,24 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { EventInput, EventContentArg } from "@fullcalendar/core";
+import { EventInput, EventContentArg, EventClickArg } from "@fullcalendar/core";
 import { readUserPeminjaman } from "@/lib/peminjaman";
 import { toast } from "sonner";
+import { Modal } from "@/components/ui/modal";
 
 interface CalendarEvent extends EventInput {
     extendedProps: {
         calendar: string;
+        bookTitle: string;
+        type: "Pinjam" | "Kembali";
     };
 }
 
 const CalendarUser: React.FC = () => {
     const [events, setEvents] = useState<CalendarEvent[]>([]);
+    const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
+        null
+    );
     const calendarRef = useRef<FullCalendar>(null);
     const [isLoading, setIsLoading] = useState(true);
 
@@ -42,19 +48,20 @@ const CalendarUser: React.FC = () => {
                     response.data
                         .filter((peminjaman) => peminjaman.status === "disetujui")
                         .forEach((peminjaman) => {
+                            const bookTitle = peminjaman.books?.title || "Unknown Book";
                             peminjamanEvents.push({
                                 id: `${peminjaman.id}-pinjam`,
-                                title: `Pinjam: ${peminjaman.books?.title || 'Buku'}`,
+                                title: `Pinjam: ${bookTitle}`,
                                 start: peminjaman.tanggal_peminjaman,
-                                extendedProps: { calendar: "Primary" },
+                                extendedProps: { calendar: "Primary", bookTitle, type: "Pinjam" },
                             });
 
                             if (peminjaman.tanggal_pengembalian) {
                                 peminjamanEvents.push({
                                     id: `${peminjaman.id}-kembali`,
-                                    title: `Batas Kembali: ${peminjaman.books?.title || 'Buku'}`,
+                                    title: `Kembali: ${bookTitle}`,
                                     start: peminjaman.tanggal_pengembalian,
-                                    extendedProps: { calendar: "Warning" },
+                                    extendedProps: { calendar: "Success", bookTitle, type: "Kembali" },
                                 });
                             }
                         });
@@ -75,6 +82,11 @@ const CalendarUser: React.FC = () => {
         return <div className="p-10 text-center">Memuat kalender...</div>;
     }
 
+    const handleEventClick = (clickInfo: EventClickArg) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        setSelectedEvent(clickInfo.event as any);
+    };
+
     return (
         <div className="rounded-2xl border  border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03]">
             <div className="custom-calendar">
@@ -88,10 +100,43 @@ const CalendarUser: React.FC = () => {
                         right: "dayGridMonth,timeGridWeek,timeGridDay",
                     }}
                     events={events}
-                    selectable={false} 
+                    eventClick={handleEventClick}
                     eventContent={renderEventContent}
                 />
             </div>
+            {selectedEvent && (
+                <Modal
+                    isOpen={!!selectedEvent}
+                    onClose={() => setSelectedEvent(null)}
+                    className="max-w-lg p-6 lg:p-8"
+                >
+                    <div className="flex flex-col px-2 overflow-y-auto custom-scrollbar">
+                        <h5 className="mb-4 font-semibold text-gray-800 modal-title text-theme-xl dark:text-white/90 lg:text-2xl">
+                            Detail Peminjaman
+                        </h5>
+                        <div className="space-y-3 text-sm text-gray-600 dark:text-gray-300">
+                            <p>
+                                <strong>Status:</strong> {selectedEvent.extendedProps.type}
+                            </p>
+                            <p>
+                                <strong>Buku:</strong> {selectedEvent.extendedProps.bookTitle}
+                            </p>
+                            <p>
+                                <strong>Tanggal:</strong>{" "}
+                                {new Date(selectedEvent.start as string).toLocaleDateString(
+                                    "id-ID",
+                                    {
+                                        weekday: "long",
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    }
+                                )}
+                            </p>
+                        </div>
+                    </div>
+                </Modal>
+            )}
         </div>
     );
 };

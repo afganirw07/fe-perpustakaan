@@ -9,10 +9,10 @@ import {
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
-  ListIcon,
   TableIcon,
   UserCircleIcon,
 } from "../icons/index";
+import { BookCopy  } from 'lucide-react';
 
 type NavItem = {
   name: string;
@@ -36,6 +36,11 @@ const navItems: NavItem[] = [
     ], 
   },
   {
+    icon: <BookCopy  />,
+    name: "Input Data Buku",
+    path: "/admin/form-elements",
+  },
+  {
     icon: <TableIcon />,
     name: "Peminjaman",
     path: "/admin/peminjaman",
@@ -51,11 +56,6 @@ const navItems: NavItem[] = [
     path: "/admin/profile",
   },
 
-  {
-    name: "Forms",
-    icon: <ListIcon />,
-    subItems: [{ name: "Nambah Buku", path: "/admin/form-elements", pro: false }],
-  },
 ];
 
 const othersItems: NavItem[] = [

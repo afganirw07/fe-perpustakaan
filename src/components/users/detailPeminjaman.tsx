@@ -63,7 +63,6 @@ export default function DetailPeminjaman({ peminjamanId }: { peminjamanId: strin
         const res = await updatePeminjamanStatus(peminjaman.id, status);
         if (res.success) {
             toast.success(`Peminjaman berhasil di-${status === "disetuju" ? "setujui" : "tolak"}`);
-            router.push("/admin/data-peminjaman");
             router.refresh();
         } else {
             toast.error(res.message || "Gagal memperbarui status.");
