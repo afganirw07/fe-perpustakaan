@@ -32,7 +32,7 @@ const navItems: NavItem[] = [
         name: "Peminjaman",
         subItems: [
             { name: "Peminjaman Aktif", path: "/user/peminjaman-aktif" },
-            { name: "Riwayat Peminjaman", path: "/user/peminjaman-riwayat" },
+            { name: "Riwayat Peminjaman", path: "/user/riwayat-peminjaman" },
         ],
     },
     {
@@ -43,7 +43,7 @@ const navItems: NavItem[] = [
     {
         icon: <CalenderIcon />,
         name: "Kalender",
-        path: "/calendar",
+        path: "/user/kalender",
     },
     {
         icon: <UserCircleIcon />,

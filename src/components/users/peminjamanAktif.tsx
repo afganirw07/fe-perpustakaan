@@ -45,18 +45,20 @@ export default function PeminjamanAktif() {
                 const response = await readUserPeminjaman(userId);
 
                 if (response.success && Array.isArray(response.data)) {
-                    const mapped = response.data.map((item) => ({
-                        id: item.id,
-                        book_id: item.book_id,
-                        title: item.books?.title,
-                        author: item.books?.author,
-                        image: item.books?.image,   
-                        status: item.status,
-                        tanggal_pinjam: item.tanggal_peminjaman,
-                        tanggal_kembali: item.tanggal_pengembalian,
-                    }));
+                    const activePeminjaman = response.data
+                        .filter((item) => item.status == "disetujui" )
+                        .map((item) => ({
+                            id: item.id,
+                            book_id: item.book_id,
+                            title: item.books?.title,
+                            author: item.books?.author,
+                            image: item.books?.image,
+                            status: item.status,
+                            tanggal_pinjam: item.tanggal_peminjaman,
+                            tanggal_kembali: item.tanggal_pengembalian,
+                        }));
 
-                    setBooks(mapped);
+                    setBooks(activePeminjaman);
                 }
 
             } catch (err) {
@@ -90,7 +92,7 @@ export default function PeminjamanAktif() {
     // Kosong
     if (books.length === 0)
         return (
-            <div className="flex h-screen items-center justify-center text-gray-500">
+            <div className="flex mt-20 items-center justify-center text-gray-500">
                 Tidak ada peminjaman aktif.
             </div>
         );

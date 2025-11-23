@@ -12,6 +12,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Send } from "lucide-react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 const BookPreview = ({ book }) => {
   if (!book) return null;
@@ -48,10 +49,11 @@ export default function DefaultInputs({ preselectedBookId }) {
     tanggal_peminjaman: "",
     tanggal_pengembalian: "",
   });
-
+  
   const [errors, setErrors] = useState({});
   const [book, setBook] = useState(null);
-
+  const router = useRouter();
+  
   // zod
   const borrowingSchema = z.object({
     full_name: z.string().min(1, "Nama lengkap wajib diisi."),
@@ -68,7 +70,7 @@ export default function DefaultInputs({ preselectedBookId }) {
   });
 
   useEffect(() => {
-    const loadBook = async () => { 
+    const loadBook = async () => {
       if (!preselectedBookId) return;
 
       const allBooks = await FetchBooks();
@@ -80,7 +82,7 @@ export default function DefaultInputs({ preselectedBookId }) {
   }, [preselectedBookId]);
 
   const handleChange = (field, value) => {
-    setErrors((prev) => ({ ...prev, [field]: undefined })); 
+    setErrors((prev) => ({ ...prev, [field]: undefined }));
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -88,7 +90,7 @@ export default function DefaultInputs({ preselectedBookId }) {
   // peminjaman
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrors({}); 
+    setErrors({});
 
     try {
       borrowingSchema.parse(form);
@@ -124,6 +126,10 @@ export default function DefaultInputs({ preselectedBookId }) {
     const res = await createPeminjaman(payload);
     if (res.success) {
       toast.success("Peminjaman berhasil! Tunggu konfirmasi admin");
+      setTimeout(() => {
+
+        router.push("/user/homepage");
+      }, 2000);
     } else {
       toast.error(res.message || "Gagal mengirim form!");
     }
@@ -166,14 +172,14 @@ export default function DefaultInputs({ preselectedBookId }) {
           <DatePicker
             id="tanggal_peminjaman"
             label="Tanggal Peminjaman"
-            onChange={(dates, dateStr) => handleChange("tanggal_peminjaman", dateStr)}            
+            onChange={(dates, dateStr) => handleChange("tanggal_peminjaman", dateStr)}
           />
           {errors.tanggal_peminjaman && <p className="text-red-500 text-sm mt-1">{errors.tanggal_peminjaman}</p>}
 
           <DatePicker
             id="tanggal_pengembalian"
             label="Tanggal Pengembalian"
-            onChange={(dates, dateStr) => handleChange("tanggal_pengembalian", dateStr)}            
+            onChange={(dates, dateStr) => handleChange("tanggal_pengembalian", dateStr)}
           />
           {errors.tanggal_pengembalian && <p className="text-red-500 text-sm mt-1">{errors.tanggal_pengembalian}</p>}
         </div>
