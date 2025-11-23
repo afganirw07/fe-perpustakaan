@@ -3,15 +3,54 @@ import { ApexOptions } from "apexcharts";
 import dynamic from "next/dynamic";
 import { MoreDotIcon } from "@/icons";
 import { DropdownItem } from "../ui/dropdown/DropdownItem";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dropdown } from "../ui/dropdown/Dropdown";
+import FetchBooks from "@/lib/books";
+import { toast } from "sonner";
 
-// Dynamically import the ReactApexChart component
+interface Book {
+  id: number;
+  title: string;
+  author: string;
+  publisher: string;
+  publication_year: number;
+  stock: number;
+  category_id: number;
+  category_name: string;
+  created_at: string;
+}
+
 const ReactApexChart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
-export default function MonthlySalesChart() {
+export default function MonthlyBooksChart() {
+  const [books, setBooks] = useState<Book[]>([]);
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchBooksData = async () => {
+      try {
+        const booksData = await FetchBooks();
+        setBooks(booksData);
+      } catch (error) {
+        toast.error("Failed to fetch books");
+        console.error(error);
+      }
+    };
+
+    fetchBooksData();
+  }, []);
+
+  const processBooksData = () => {
+    const monthlyData = new Array(12).fill(0);
+    books.forEach((book) => {
+      const month = new Date(book.created_at).getMonth();
+      monthlyData[month]++;
+    });
+    return monthlyData;
+  };
+
   const options: ApexOptions = {
     colors: ["#465fff"],
     chart: {
@@ -81,23 +120,22 @@ export default function MonthlySalesChart() {
     fill: {
       opacity: 1,
     },
-
     tooltip: {
       x: {
         show: false,
       },
       y: {
-        formatter: (val: number) => `${val}`,
+        formatter: (val: number) => `${val} buku`,
       },
     },
   };
+
   const series = [
     {
-      name: "Sales",
-      data: [168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112],
+      name: "Jumlah Buku",
+      data: processBooksData(),
     },
   ];
-  const [isOpen, setIsOpen] = useState(false);
 
   function toggleDropdown() {
     setIsOpen(!isOpen);
@@ -111,7 +149,7 @@ export default function MonthlySalesChart() {
     <div className="overflow-hidden rounded-2xl border border-gray-200 bg-white px-5 pt-5 dark:border-gray-800 dark:bg-white/[0.03] sm:px-6 sm:pt-6">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Monthly Sales
+          Jumlah Buku Ditambahkan
         </h3>
 
         <div className="relative inline-block">

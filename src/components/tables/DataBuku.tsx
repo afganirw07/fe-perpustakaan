@@ -99,7 +99,7 @@ export default function DataBuku() {
 
     return (
         <>
-            <div className="max-w-full overflow-x-auto">
+            <div className="max-w-full border rounded-2xl bg-white overflow-x-auto">
                 <div className="min-w-[1102px]">
                     <Table>
                         {/* Table Header */}
