@@ -38,3 +38,13 @@ export async function deleteBook(book_id: number) {
         method: "DELETE",
     });
 }
+
+export async function createBook(bookData: Partial<Book>) {
+    return apiFetch("/api/books/create", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bookData),
+    });
+}
