@@ -7,8 +7,7 @@ import StatisticsChart from "@/components/ecommerce/StatisticsChart";
 
 export const metadata: Metadata = {
   title:
-    "Next.js E-commerce Dashboard | TailAdmin - Next.js Dashboard Template",
-  description: "This is Next.js Home for TailAdmin Dashboard Template",
+    "Perpustakaan Nasional",
 };
 
 export default function Ecommerce() {
