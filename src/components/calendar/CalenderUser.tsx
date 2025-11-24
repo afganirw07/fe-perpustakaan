@@ -46,7 +46,7 @@ const CalendarUser: React.FC = () => {
                 if (response.success && Array.isArray(response.data)) {
                     const peminjamanEvents: CalendarEvent[] = [];
                     response.data
-                        .filter((peminjaman) => peminjaman.status === "disetujui")
+                        .filter((peminjaman) => peminjaman.status === "disetuju")
                         .forEach((peminjaman) => {
                             const bookTitle = peminjaman.books?.title || "Unknown Book";
                             peminjamanEvents.push({
