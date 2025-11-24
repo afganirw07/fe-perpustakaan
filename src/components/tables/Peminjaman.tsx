@@ -10,11 +10,13 @@ import {
 
 import Badge from "../ui/badge/Badge";
 import { Button } from "../ui/button/Navbutton";
-import { Check, X, Info } from "lucide-react";
+import { Check, X, Info, Search } from "lucide-react";
 import { readAllPeminjaman } from "@/lib/peminjaman";
 import { useRouter } from "next/navigation";
 import { updatePeminjamanStatus } from "@/lib/peminjaman";
 import { toast } from "sonner";
+import { Input } from "@/components/ui/input/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select/select";
 
 
 interface BorrowRequest {
@@ -33,6 +35,8 @@ interface BorrowRequest {
 
 export default function PeminjamanBuku() {
     const [tableData, setTableData] = useState<BorrowRequest[]>([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("all");
     const router = useRouter();
 
 
@@ -56,9 +60,40 @@ export default function PeminjamanBuku() {
         }
     };
 
+    const filteredData = tableData.filter(p => {
+        const matchesSearch =
+            p.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            p.books.title.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesStatus = statusFilter === "all" || p.status === statusFilter;
+
+        return matchesSearch && matchesStatus;
+    });
+
 
     return (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+        <>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-6">
+                <div className="relative w-full sm:max-w-xs">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input type="text" placeholder="Cari nama peminjam." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} className="pl-10 h-10 w-full dark:bg-gray-800" />
+                </div>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                        <SelectTrigger className="h-10 w-full sm:w-[180px] dark:bg-gray-800">
+                            <SelectValue placeholder="Filter Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Semua Status</SelectItem>
+                            <SelectItem value="pending">Pending</SelectItem>
+                            <SelectItem value="disetuju">Disetujui</SelectItem>
+                            <SelectItem value="ditolak">Ditolak</SelectItem>
+                            <SelectItem value="dikembalikan">Dikembalikan</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
+            </div>
+            <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
             <div className="max-w-full overflow-x-auto">
                 <div className="min-w-[1102px]">
                     <Table>
@@ -104,7 +139,7 @@ export default function PeminjamanBuku() {
 
                         {/* BODY */}
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                            {tableData.map((p) => (
+                            {filteredData.length > 0 ? filteredData.map((p) => (
                                 <TableRow key={p.id}>
 
                                     <TableCell className="px-5 py-4 sm:px-6 text-start">
@@ -183,11 +218,18 @@ export default function PeminjamanBuku() {
                                         </div>
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )) : (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="text-center py-10">
+                                        <p className="text-gray-500">Tidak ada data peminjaman yang cocok dengan kriteria filter.</p>
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </div>
             </div>
-        </div>
+            </div>
+        </>
     );
 }

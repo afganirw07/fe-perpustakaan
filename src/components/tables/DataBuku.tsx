@@ -12,15 +12,17 @@ import Badge from "../ui/badge/Badge";
 import Image from "next/image";
 import FetchBooks, { updateBook, deleteBook } from "@/lib/books";
 import { useState, useEffect } from "react";
-import { Button } from "../ui/button/Navbutton";
-import { Edit, Trash2 } from "lucide-react";
+import { Button, buttonVariants } from "../ui/button/Navbutton";
+import { Edit, Trash2, Search, Filter, X } from "lucide-react";
 import {
     Dialog,
     DialogContent,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog/dialog"
+} from "@/components/ui/dialog/dialog";
+import { Input } from "@/components/ui/input/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select/select";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
@@ -42,6 +44,9 @@ export default function DataBuku() {
     const [tableData, setTableData] = useState<Book[]>([]);
     const [editingBook, setEditingBook] = useState<Book | null>(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [statusFilter, setStatusFilter] = useState("all");
+    const [categoryFilter, setCategoryFilter] = useState("all");
     const router = useRouter();
 
     useEffect(() => {
@@ -52,6 +57,20 @@ export default function DataBuku() {
 
         FetchData();
     }, []);
+
+    const filteredData = tableData.filter(book => {
+        const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            book.author.toLowerCase().includes(searchTerm.toLowerCase());
+
+        const matchesStatus = statusFilter === "all" ||
+            (statusFilter === "tersedia" && book.is_available) ||
+            (statusFilter === "dipinjam" && !book.is_available);
+
+        const matchesCategory = categoryFilter === "all" || book.category === categoryFilter;
+
+        return matchesSearch && matchesStatus && matchesCategory;
+    });
+    const categories = ["all", ...Array.from(new Set(tableData.map(book => book.category)))];
 
     const handleEditClick = (book: Book) => {
         setEditingBook({ ...book });
@@ -99,8 +118,45 @@ export default function DataBuku() {
 
     return (
         <>
-            <div className="max-w-full border rounded-2xl bg-white overflow-x-auto">
-                <div className="min-w-[1102px]">
+            <div className="p-4 bg-white dark:bg-gray-900/50 rounded-xl border border-gray-200 dark:border-white/[0.05] mb-6">
+                <div className="flex items-center gap-2 mb-4">
+                    <Filter className="h-5 w-5 text-gray-500" />
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">Filter Data Buku</h3>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                        <Input
+                            type="text"
+                            placeholder="Cari judul atau penulis..."
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                            className="pl-10 h-11 dark:bg-gray-800"
+                        />
+                    </div>
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                        <SelectTrigger className="h-11 dark:bg-gray-800">
+                            <SelectValue placeholder="Filter berdasarkan status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">Semua Status</SelectItem>
+                            <SelectItem value="tersedia">Tersedia</SelectItem>
+                            <SelectItem value="dipinjam">Dipinjam</SelectItem>
+                        </SelectContent>
+                    </Select>
+                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                        <SelectTrigger className="h-11 dark:bg-gray-800">
+                            <SelectValue placeholder="Filter berdasarkan kategori" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {categories.map(cat => <SelectItem key={cat} value={cat}>{cat === 'all' ? 'Semua Kategori' : cat}</SelectItem>)}
+                        </SelectContent>
+                    </Select>
+                    <Button variant="outline" onClick={() => { setSearchTerm(""); setStatusFilter("all"); setCategoryFilter("all"); }} className="h-11 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"><X className="mr-2 h-4 w-4" /> Reset Filter</Button>
+                </div>
+            </div>
+            <div className="max-w-full border rounded-2xl bg-white dark:bg-white/[0.03] overflow-x-auto">
+                <div className="min-w-[1102px] ">
                     <Table>
                         {/* Table Header */}
                         <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
@@ -140,7 +196,7 @@ export default function DataBuku() {
 
                         {/* Table Body */}
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                            {tableData.map((book) => (
+                            {filteredData.length > 0 ? filteredData.map((book) => (
                                 <TableRow key={book.id}>
                                     <TableCell key={`${book.id}-judul`} className="px-5 py-4 sm:px-6 text-start">
                                         <div className="flex items-center gap-3">
@@ -185,7 +241,13 @@ export default function DataBuku() {
                                         <Button variant="outline" size="icon" onClick={() => deteleBook(book.id)} className="h-8 w-8 bg-red-600 hover:bg-red-700 text-white" ><Trash2 className="h-4 w-4" /></Button>
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )) : (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="text-center py-10">
+                                        <p className="text-gray-500">Tidak ada buku yang cocok dengan kriteria filter.</p>
+                                    </TableCell>
+                                </TableRow>
+                            )}
                         </TableBody>
                     </Table>
                 </div>

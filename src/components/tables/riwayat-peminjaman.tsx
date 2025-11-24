@@ -178,7 +178,7 @@ export default function RiwayatPeminjaman() {
                                 filteredHistory.map((book) => (
                                     <TableRow key={book.id}>
                                         <TableCell className="px-5 py-4 sm:px-6 text-start">
-                                            <div onClick={() => router.push(`/user/detail/${book.book_id}`)} className="flex items-center gap-3">
+                                            <div onClick={() => router.push(`/user/detail/${book.book_id}`)} className="flex items-center gap-3 cursor-pointer">
                                                 <div className="w-10 h-10 overflow-hidden rounded-full">
                                                     <Image
                                                         width={40}
