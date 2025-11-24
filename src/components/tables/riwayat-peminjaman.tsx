@@ -52,7 +52,7 @@ export default function RiwayatPeminjaman() {
                 const response = await readUserPeminjaman(userId);
                 if (response.success && Array.isArray(response.data)) {
                     const returnedBooks = response.data
-                        .filter((item) => item.status === "dikembalikan")
+                        .filter((item) => item.status === "dikembalikan" || item.status === "ditolak")
                         .map((item) => ({
                             id: item.id,
                             book_id: item.books?.id || item.book_id,
@@ -207,9 +207,11 @@ export default function RiwayatPeminjaman() {
                                         <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
                                             <Badge
                                                 size="sm"
-                                                color="success"
+                                                color={
+                                                    book.status === "dikembalikan" ? "success" : "error"
+                                                }
                                             >
-                                                Dikembalikan
+                                                {book.status}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 flex gap-2">

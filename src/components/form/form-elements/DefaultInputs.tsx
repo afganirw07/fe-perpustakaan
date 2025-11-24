@@ -49,11 +49,11 @@ export default function DefaultInputs({ preselectedBookId }) {
     tanggal_peminjaman: "",
     tanggal_pengembalian: "",
   });
-  
+
   const [errors, setErrors] = useState({});
   const [book, setBook] = useState(null);
   const router = useRouter();
-  
+
   // zod
   const borrowingSchema = z.object({
     full_name: z.string().min(1, "Nama lengkap wajib diisi."),

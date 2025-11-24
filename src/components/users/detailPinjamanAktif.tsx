@@ -29,6 +29,7 @@ interface BorrowRequest {
     tanggal_peminjaman: string;
     tanggal_pengembalian: string | null;
     status: "pending" | "disetuju" | "ditolak" | "dikembalikan";
+    alasan?: string;
     books: {
         title: string;
         description: string;
@@ -209,6 +210,18 @@ export default function DetailPeminjamanAktif({ peminjamanId }: { peminjamanId: 
                     </div>
                 </div>
 
+                {/* Alasan Penolakan */}
+                {peminjaman.status === "ditolak" && peminjaman.alasan && (
+                    <div className="space-y-2">
+                        <Label className="font-semibold text-red-600">Alasan Penolakan</Label>
+                        <textarea
+                            value={peminjaman.alasan}
+                            readOnly
+                            className="w-full p-3 border rounded-lg bg-red-50 text-red-900 dark:bg-red-900/20 dark:text-red-200 dark:border-red-700 cursor-not-allowed"
+                            rows={3}
+                        />
+                    </div>
+                )}
                 {/* Tombol Kembalikan Buku (user only) */}
                 {peminjaman.status === "disetuju" && (
                     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>

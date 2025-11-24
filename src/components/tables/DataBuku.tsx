@@ -38,6 +38,12 @@ interface Book {
     image: string;
     stock: number;
     is_available: boolean;
+    total_pages: number;
+    language: string;
+    location_code: string;
+    condition: string;
+    stars: number;
+
 }
 
 export default function DataBuku() {
@@ -254,39 +260,70 @@ export default function DataBuku() {
             </div>
             {editingBook && (
                 <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-                    <DialogContent className="sm:max-w-lg bg-white dark:bg-gray-900">
-                        <DialogHeader>
-                            <DialogTitle className="text-xl font-bold">Edit Data Buku</DialogTitle>
+                    <DialogContent className="sm:max-w-4xl bg-white dark:bg-gray-900">
+                        <DialogHeader className="border-b pb-3">
+                            <DialogTitle className="text-2xl font-bold">Edit Data Buku</DialogTitle>
                         </DialogHeader>
-                        <div className="grid gap-6 py-4">
-                            <div className="space-y-2">
-                                <label htmlFor="title" className="text-sm font-medium text-gray-700 dark:text-gray-400">Judul</label>
-                                <input id="title" name="title" value={editingBook.title} onChange={handleInputChange} className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-                            </div>
-                            <div className="space-y-2">
-                                <label htmlFor="author" className="text-sm font-medium text-gray-700 dark:text-gray-400">Author</label>
-                                <input id="author" name="author" value={editingBook.author} onChange={handleInputChange} className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-                            </div>
-                            <div className="space-y-2">
-                                <label htmlFor="publisher" className="text-sm font-medium text-gray-700 dark:text-gray-400">Publisher</label>
-                                <input id="publisher" name="publisher" value={editingBook.publisher} onChange={handleInputChange} className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
-                            </div>
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="space-y-2">
-                                    <label htmlFor="year" className="text-sm font-medium text-gray-700 dark:text-gray-400">Tahun</label>
-                                    <input id="year" name="year" type="number" value={editingBook.year} onChange={handleInputChange} className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                        <div className="grid md:grid-cols-3 gap-8 py-4 max-h-[75vh] overflow-y-auto pr-4">
+                            {/* Kolom Kiri: Gambar & URL */}
+                            <div className="md:col-span-1 space-y-4">
+                                <div className="flex justify-center">
+                                    <Image
+                                        src={editingBook.image || "/no-image.png"}
+                                        alt="Live preview sampul buku"
+                                        width={150}
+                                        height={225}
+                                        className="object-cover rounded-lg shadow-lg border w-full h-auto max-w-[180px]"
+                                        onError={(e) => { e.currentTarget.src = "/no-image.png"; }}
+                                    />
                                 </div>
                                 <div className="space-y-2">
-                                    <label htmlFor="stock" className="text-sm font-medium text-gray-700 dark:text-gray-400">Stock</label>
-                                    <input id="stock" name="stock" type="number" value={editingBook.stock} onChange={handleInputChange} className="dark:bg-dark-900 h-11 w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                    <label htmlFor="image" className="text-sm font-medium text-gray-700 dark:text-gray-400">URL Gambar</label>
+                                    <textarea id="image" name="image" value={editingBook.image} onChange={handleInputChange} rows={3} className="dark:bg-dark-900 text-xs w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
                                 </div>
                             </div>
-                            <div className="space-y-2">
-                                <label htmlFor="description" className="text-sm font-medium text-gray-700 dark:text-gray-400">Deskripsi</label>
-                                <textarea id="description" name="description" value={editingBook.description} onChange={handleInputChange} className="dark:bg-dark-900 min-h-[100px] w-full rounded-lg border border-gray-300 bg-transparent px-4 py-2.5 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+
+                            {/* Kolom Kanan: Form Fields */}
+                            <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-5">
+                                <div className="sm:col-span-2 space-y-2">
+                                    <label htmlFor="title" className="text-sm font-medium text-gray-700 dark:text-gray-400">Judul Buku</label>
+                                    <input id="title" name="title" value={editingBook.title} onChange={handleInputChange} className="dark:bg-dark-900 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label htmlFor="author" className="text-sm font-medium text-gray-700 dark:text-gray-400">Author</label>
+                                    <input id="author" name="author" value={editingBook.author} onChange={handleInputChange} className="dark:bg-dark-900 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label htmlFor="publisher" className="text-sm font-medium text-gray-700 dark:text-gray-400">Publisher</label>
+                                    <input id="publisher" name="publisher" value={editingBook.publisher} onChange={handleInputChange} className="dark:bg-dark-900 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                </div>
+                                <div className="sm:col-span-2 space-y-2">
+                                    <label htmlFor="isbn" className="text-sm font-medium text-gray-700 dark:text-gray-400">ISBN</label>
+                                    <input id="isbn" name="isbn" value={editingBook.isbn} onChange={handleInputChange} className="dark:bg-dark-900 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label htmlFor="category" className="text-sm font-medium text-gray-700 dark:text-gray-400">Kategori</label>
+                                    <input id="category" name="category" value={editingBook.category} onChange={handleInputChange} className="dark:bg-dark-900 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label htmlFor="year" className="text-sm font-medium text-gray-700 dark:text-gray-400">Tahun Terbit</label>
+                                    <input id="year" name="year" type="number" value={editingBook.year} onChange={handleInputChange} className="dark:bg-dark-900 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label htmlFor="stock" className="text-sm font-medium text-gray-700 dark:text-gray-400">Stok</label>
+                                    <input id="stock" name="stock" type="number" value={editingBook.stock} onChange={handleInputChange} className="dark:bg-dark-900 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                </div>
+                                <div className="space-y-2">
+                                    <label htmlFor="total_pages" className="text-sm font-medium text-gray-700 dark:text-gray-400">Jumlah Halaman</label>
+                                    <input id="total_pages" name="total_pages" type="number" value={editingBook.total_pages} onChange={handleInputChange} className="dark:bg-dark-900 h-10 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                </div>
+                                <div className="sm:col-span-2 space-y-2">
+                                    <label htmlFor="description" className="text-sm font-medium text-gray-700 dark:text-gray-400">Deskripsi</label>
+                                    <textarea id="description" name="description" value={editingBook.description} onChange={handleInputChange} rows={5} className="dark:bg-dark-900 w-full rounded-lg border border-gray-300 bg-transparent px-3 py-2 text-sm text-gray-800 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800" />
+                                </div>
                             </div>
                         </div>
-                        <DialogFooter>
+                        <DialogFooter className="border-t pt-4">
                             <Button onClick={() => setIsEditDialogOpen(false)} variant="outline">Batal</Button>
                             <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700 text-white">Simpan Perubahan</Button>
                         </DialogFooter>

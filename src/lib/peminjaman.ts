@@ -8,6 +8,7 @@ export async function createPeminjaman(data: {
     tanggal_peminjaman?: string;
     tanggal_pengembalian?: string;
     status?: string;
+    alasan?: string;
 }) {
     try {
         const res = await apiFetch("/api/peminjaman/create", {
@@ -50,10 +51,16 @@ export async function getPeminjamanByUser(user_id: string) {
 
 export async function updatePeminjamanStatus(
     id: string,
-    status: "pending" | "disetuju" | "ditolak" | "dikembalikan"
+    status: "pending" | "disetuju" | "ditolak" | "dikembalikan",
+    alasan: string
 ) {
     try {
-        const res = await apiFetch(`/api/peminjaman/status/${id}?status=${status}`, {
+        const params = new URLSearchParams();
+        params.append("status", status);
+        if (alasan) {
+            params.append("alasan", alasan);
+        }
+        const res = await apiFetch(`/api/peminjaman/status/${id}?${params.toString()}`, {
             method: "PUT",
         });
 

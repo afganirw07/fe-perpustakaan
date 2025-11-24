@@ -28,7 +28,7 @@ const navItems: NavItem[] = [
     subItems: [{ name: "Perpustakaan", path: "/admin/dashboard", pro: false }],
   },
   {
-    name: "Data Tables",
+    name: "Data Tabel",
     icon: <TableIcon />,
     subItems: [
       { name: "Data Buku", path: "/admin/data-buku", pro: false },

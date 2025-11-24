@@ -49,13 +49,6 @@ const CalendarUser: React.FC = () => {
                         .filter((peminjaman) => peminjaman.status === "disetuju")
                         .forEach((peminjaman) => {
                             const bookTitle = peminjaman.books?.title || "Unknown Book";
-                            peminjamanEvents.push({
-                                id: `${peminjaman.id}-pinjam`,
-                                title: `Pinjam: ${bookTitle}`,
-                                start: peminjaman.tanggal_peminjaman,
-                                extendedProps: { calendar: "Primary", bookTitle, type: "Pinjam" },
-                            });
-
                             if (peminjaman.tanggal_pengembalian) {
                                 peminjamanEvents.push({
                                     id: `${peminjaman.id}-kembali`,
