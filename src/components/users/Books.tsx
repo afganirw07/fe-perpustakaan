@@ -53,7 +53,6 @@ export default function Books() {
 
     const [books, setBooks] = useState<Book[]>([]);
     const [wishlist, setWishlist] = useState<Set<number>>(new Set());
-    const [error, setError] = useState<string | null>(null);
     const { query } = useSearch();
 
     const filteredBooks = books.filter((book) => {
@@ -89,7 +88,6 @@ export default function Books() {
                 setBooks(allBooks || []);
             } catch (err) {
                 console.error("Error fetching books:", err);
-                setError("Gagal mengambil data buku.");
                 setBooks([]);
             }
         };

@@ -12,7 +12,7 @@ import Badge from "../ui/badge/Badge";
 import Image from "next/image";
 import FetchBooks, { updateBook, deleteBook } from "@/lib/books";
 import { useState, useEffect } from "react";
-import { Button, buttonVariants } from "../ui/button/Navbutton";
+import { Button } from "../ui/button/Navbutton";
 import { Edit, Trash2, Search, Filter, X } from "lucide-react";
 import {
     Dialog,

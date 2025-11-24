@@ -1,6 +1,5 @@
 "use client";
 
-import React, { useEffect } from "react";
 import { Navbar } from "@/components/landing/navbar";
 import HeroSection from "@/components/landing/HeroSection/hero";
 import Testimonial from "@/components/landing/testi/testimonial";

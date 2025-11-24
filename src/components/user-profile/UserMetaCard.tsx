@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import { useModal } from "../../hooks/useModal";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 
@@ -12,7 +11,6 @@ const getCookie = (name: string): string | undefined => {
   if (parts.length === 2) return decodeURIComponent(parts.pop()?.split(';').shift() || '');
 };
 export default function UserMetaCard() {
-  const { isOpen, openModal, closeModal } = useModal();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [isClient, setIsClient] = useState(false);
@@ -30,16 +28,6 @@ export default function UserMetaCard() {
     }
   }, []);
 
-  const handleChangeName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
-  };
-
-  const handleChangeEmail = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(event.target.value);
-  };
-
-  const defaultFirstName = name.split(" ")[0] || "";
-  const defaultLastName = name.split(" ").slice(1).join(" ") || "";
 
   return (
     <>
