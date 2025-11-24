@@ -83,9 +83,9 @@ export default function CreateBookForm() {
           <div className="md:col-span-1 space-y-4">
             <div className="flex justify-center">
               <img
-                src={image}
+                src={image || "https://upload.wikimedia.org/wikipedia/commons/thumb/6/65/No-Image-Placeholder.svg/832px-No-Image-Placeholder.svg.png"}
                 width={250}
-                height={350}
+                height={300}
                 className="object-cover rounded-lg shadow-lg border w-full h-auto max-w-[220px]"
                 onError={(e) => (e.currentTarget.src = "/no-image.png")}
               />
