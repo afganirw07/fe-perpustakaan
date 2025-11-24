@@ -263,19 +263,12 @@ const AppSidebar: React.FC = () => {
       <div className="py-8 flex justify-center items-center">
         <Link href="/admin/dashboard">
           <>
-            <Image
+            <Image   
               className="dark:hidden"
               src="/images/logo/logo.svg"
               alt="Logo"
               width={150}
               height={70}
-            />
-            <Image
-              className="hidden dark:block"
-              src="/images/logo/logo-dark.svg"
-              alt="Logo"
-              width={150}
-              height={40}
             />
           </>
         </Link>

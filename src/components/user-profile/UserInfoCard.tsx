@@ -55,7 +55,8 @@ export default function UserInfoCard() {
       document.cookie = `full_name=${name}; Path=/; Max-Age=604800; SameSite=Lax;`;
       document.cookie = `email=${email}; Path=/; Max-Age=604800; SameSite=Lax;`;
 
-      router.refresh();
+      // router.refresh();
+      window.location.reload();
 
       closeModal();
     } catch (err) {
