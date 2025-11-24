@@ -46,7 +46,7 @@ export default function PeminjamanAktif() {
 
                 if (response.success && Array.isArray(response.data)) {
                     const activePeminjaman = response.data
-                        .filter((item) => item.status == "disetujui" )
+                        .filter((item) => item.status == "disetuju" )
                         .map((item) => ({
                             id: item.id,
                             book_id: item.book_id,

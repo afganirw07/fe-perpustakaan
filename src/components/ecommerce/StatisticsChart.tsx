@@ -137,14 +137,13 @@ export default function StatisticsChart() {
         setLoading(true);
         const currentYear = new Date().getFullYear();
 
-        // Fetch both datasets concurrently
         const [peminjamanResponse, usersResponse] = await Promise.all([
           readAllPeminjaman(),
           FetchUsers(),
         ]);
 
-        console.log("DEBUG: Peminjaman Response:", peminjamanResponse);
-        console.log("DEBUG: Users Response:", usersResponse);
+        // console.log("DEBUG: Peminjaman Response:", peminjamanResponse);
+        // console.log("DEBUG: Users Response:", usersResponse);
 
 
         const peminjamanData = (peminjamanResponse?.data || []) as Peminjaman[];

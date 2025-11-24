@@ -20,10 +20,11 @@ export async function createPeminjaman(data: {
             message: res.message,
             data: res.data,
         };
-    } catch (err: any) {
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Unknown error" ; 
         return {
             success: false,
-            message: err.message || "Gagal membuat peminjaman",
+            message
         };
     }
 }
@@ -38,10 +39,11 @@ export async function getPeminjamanByUser(user_id: string) {
             success: true,
             data: res,
         };
-    } catch (err: any) {
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Unknown error" ; 
         return {
             success: false,
-            message: err.message || "Gagal mengambil data peminjaman",
+            message
         };
     }
 }
@@ -60,10 +62,11 @@ export async function updatePeminjamanStatus(
             message: res.message,
             data: res.data,
         };
-    } catch (err: any) {
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Unknown error" ; 
         return {
             success: false,
-            message: err.message || "Gagal update status",
+            message
         };
     }
 }
@@ -78,10 +81,11 @@ export async function readUserPeminjaman(user_id: string) {
             success: true,
             data: res,
         };
-    } catch (err: any) {
+    } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : "Unknown error" ; 
         return {
             success: false,
-            message: err.message || "Gagal mengambil data peminjaman user",
+            message
         };
     }
 
@@ -97,10 +101,11 @@ export async function readAllPeminjaman() {
             success: true,
             data: res,
         };
-    } catch (err: any) {
+    } catch (err : unknown) {
+        const message = err instanceof Error ? err.message : "Unknown error" ; 
         return {
             success: false,
-            message: err.message || "Gagal mengambil semua peminjaman",
+            message
         };
     }
 }
