@@ -145,7 +145,7 @@ const renderEventContent = (eventInfo: EventContentArg) => {
     const colorClass = `fc-bg-${eventInfo.event.extendedProps.calendar.toLowerCase()}`;
     return (
         <div
-            className={`event-fc-color flex fc-event-main ${colorClass} p-1 rounded-sm`}
+            className={`event-fc-color flex fc-event-main ${colorClass} p-1 rounded-sm cursor-pointer`}
         >
             <div className="fc-daygrid-event-dot"></div>
             <div className="fc-event-time">{eventInfo.timeText}</div>
