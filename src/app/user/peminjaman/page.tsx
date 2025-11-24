@@ -1,10 +1,10 @@
-"use client";
-import DefaultInputs from "@/components/form/form-elements/DefaultInputs"
-import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
+import PeminjamanClient from "./PeminjamanClient";
 
 export default function PeminjamanPage() {
-    const params = useSearchParams();
-    const book_id = params.get("book_id");
-
-    return <DefaultInputs preselectedBookId={book_id} />;
+    return (
+        <Suspense fallback={<div>Memuat formulir...</div>}>
+            <PeminjamanClient />
+        </Suspense>
+    );
 }
