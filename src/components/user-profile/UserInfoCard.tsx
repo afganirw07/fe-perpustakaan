@@ -6,7 +6,6 @@ import Button from "../ui/button/Button";
 import Input from "../form/input/InputField";
 import Label from "../form/Label";
 import editUsers from "@/lib/auth";
-import { useRouter } from "next/navigation";
 import { toast } from "sonner"
 
 const getCookie = (name: string): string | undefined => {
@@ -22,7 +21,6 @@ export default function UserInfoCard() {
   const [userId, setUserId] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const router = useRouter();
 
 
   // ambil dari cookie
