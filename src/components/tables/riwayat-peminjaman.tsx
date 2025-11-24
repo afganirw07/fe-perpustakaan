@@ -16,6 +16,7 @@ import { readUserPeminjaman } from "@/lib/peminjaman";
 
 interface Book {
     id: string;
+    book_id: number;
     title: string;
     author: string;
     image: string;
@@ -29,6 +30,8 @@ export default function RiwayatPeminjaman() {
     const [history, setHistory] = useState<Book[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [startDate, setStartDate] = useState<string>("");
+    const [endDate, setEndDate] = useState<string>("");
 
     const getCookie = (name: string) => {
         const value = `; ${document.cookie}`;
@@ -52,6 +55,7 @@ export default function RiwayatPeminjaman() {
                         .filter((item) => item.status === "dikembalikan")
                         .map((item) => ({
                             id: item.id,
+                            book_id: item.books?.id || item.book_id,
                             title: item.books?.title || "Judul tidak tersedia",
                             author: item.books?.author || "Author tidak diketahui",
                             image: item.books?.image || "/placeholder.jpg",
@@ -60,6 +64,7 @@ export default function RiwayatPeminjaman() {
                             tanggal_kembali: item.tanggal_pengembalian,
                         }));
                     setHistory(returnedBooks);
+                    // console.log(returnedBooks)
                 }
             } catch (err) {
                 console.error("Gagal memuat riwayat peminjaman:", err);
@@ -72,12 +77,62 @@ export default function RiwayatPeminjaman() {
         loadHistory();
     }, []);
 
+    const filteredHistory = history.filter((book) => {
+        if (!startDate && !endDate) {
+            return true;
+        }
+        if (book.tanggal_pinjam) {
+            const pinjamDate = new Date(book.tanggal_pinjam);
+            pinjamDate.setHours(0, 0, 0, 0);
+
+            if (startDate && endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                start.setHours(0, 0, 0, 0);
+                end.setHours(0, 0, 0, 0);
+                return pinjamDate >= start && pinjamDate <= end;
+            }
+            if (startDate) {
+                const start = new Date(startDate);
+                start.setHours(0, 0, 0, 0);
+                return pinjamDate >= start;
+            }
+            if (endDate) {
+                const end = new Date(endDate);
+                end.setHours(0, 0, 0, 0);
+                return pinjamDate <= end;
+            }
+        }
+        return false;
+    });
+
     if (isLoading) return <div className="text-center p-10">Memuat riwayat...</div>;
     if (error) return <div className="text-center p-10 text-red-600">{error}</div>;
-    if (history.length === 0) return <div className="text-center p-10 text-gray-500">Tidak ada riwayat peminjaman.</div>;
 
     return (
         <div className="overflow-hidden rounded-xl border border-gray-200 bg-white dark:border-white/[0.05] dark:bg-white/[0.03]">
+            <div className="p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                <div className="flex items-center gap-2">
+                    <label htmlFor="startDate" className="text-sm font-medium text-gray-700 dark:text-gray-300">Dari Tanggal:</label>
+                    <input
+                        id="startDate"
+                        type="date"
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value)}
+                        className="border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    />
+                </div>
+                <div className="flex items-center gap-2">
+                    <label htmlFor="endDate" className="text-sm font-medium text-gray-700 dark:text-gray-300">Sampai Tanggal:</label>
+                    <input
+                        id="endDate"
+                        type="date"
+                        value={endDate}
+                        onChange={(e) => setEndDate(e.target.value)}
+                        className="border border-gray-300 rounded-md p-2 dark:bg-gray-800 dark:border-gray-600 dark:text-white"
+                    />
+                </div>
+            </div>
             <div className="max-w-full overflow-x-auto">
                 <div className="min-w-[1102px]">
                     <Table>
@@ -119,48 +174,56 @@ export default function RiwayatPeminjaman() {
 
                         {/* Table Body */}
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                            {history.map((book) => (
-                                <TableRow key={book.id}>
-                                    <TableCell className="px-5 py-4 sm:px-6 text-start">
-                                        <div className="flex items-center gap-3">
-                                            <div className="w-10 h-10 overflow-hidden rounded-full">
-                                                <Image
-                                                    width={40}
-                                                    height={40}
-                                                    src={book.image}
-                                                    alt={book.title}
-                                                    className="object-cover w-full h-full"
-                                                />
+                            {filteredHistory.length > 0 ? (
+                                filteredHistory.map((book) => (
+                                    <TableRow key={book.id}>
+                                        <TableCell className="px-5 py-4 sm:px-6 text-start">
+                                            <div onClick={() => router.push(`/user/detail/${book.book_id}`)} className="flex items-center gap-3">
+                                                <div className="w-10 h-10 overflow-hidden rounded-full">
+                                                    <Image
+                                                        width={40}
+                                                        height={40}
+                                                        src={book.image}
+                                                        alt={book.title}
+                                                        className="object-cover w-full h-full"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
+                                                        {book.title}
+                                                    </span>
+                                                    <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
+                                                        {book.author}
+                                                    </span>
+                                                </div>
                                             </div>
-                                            <div>
-                                                <span className="block font-medium text-gray-800 text-theme-sm dark:text-white/90">
-                                                    {book.title}
-                                                </span>
-                                                <span className="block text-gray-500 text-theme-xs dark:text-gray-400">
-                                                    {book.author}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </TableCell>
-                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                        {book.tanggal_pinjam ? new Date(book.tanggal_pinjam).toLocaleDateString("id-ID") : "-"}
-                                    </TableCell>
-                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                        {book.tanggal_kembali ? new Date(book.tanggal_kembali).toLocaleDateString("id-ID") : "-"}
-                                    </TableCell>
-                                    <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
-                                        <Badge
-                                            size="sm"
-                                            color="success"
-                                        >
-                                            Dikembalikan
-                                        </Badge>
-                                    </TableCell>
-                                    <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 flex gap-2">
-                                        <Button variant="outline" size="icon" className="h-8 w-8 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => router.push(`/user/detail-peminjaman/${book.id}`)}><Info className="h-4 w-4" /></Button>
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                            {book.tanggal_pinjam ? new Date(book.tanggal_pinjam).toLocaleDateString("id-ID") : "-"}
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                            {book.tanggal_kembali ? new Date(book.tanggal_kembali).toLocaleDateString("id-ID") : "-"}
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-start text-theme-sm dark:text-gray-400">
+                                            <Badge
+                                                size="sm"
+                                                color="success"
+                                            >
+                                                Dikembalikan
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 flex gap-2">
+                                            <Button variant="outline" size="icon" className="h-8 w-8 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => router.push(`/user/detail-peminjaman/${book.id}`)}><Info className="h-4 w-4" /></Button>
+                                        </TableCell>
+                                    </TableRow>
+                                ))
+                            ) : (
+                                <TableRow>
+                                    <TableCell colSpan={5} className="text-center p-10 text-gray-500">
+                                        {history.length === 0 ? "Tidak ada riwayat peminjaman." : "Tidak ada riwayat peminjaman yang cocok dengan filter."}
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                            )}
                         </TableBody>
                     </Table>
                 </div>

@@ -97,13 +97,12 @@ export default function DetailPeminjamanAktif({ peminjamanId }: { peminjamanId: 
             if (returnRes.success) {
                 toast.success("Ulasan berhasil dikirim dan buku telah dikembalikan.");
                 setIsModalOpen(false);
-                router.push('user/homepage');
-            } else {
+                router.refresh();            } else {
                 toast.error("Gagal mengembalikan buku setelah mengirim ulasan.");
             }
         } catch (error) {
             toast.error("Terjadi kesalahan saat mengirim ulasan.");
-            console.error("============================================s", error);
+            console.error(error);
         }
     };
 
