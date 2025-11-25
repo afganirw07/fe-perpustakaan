@@ -161,26 +161,6 @@ export default function DataBuku() {
                             <SelectItem value="dipinjam">Dipinjam</SelectItem>
                         </SelectContent>
                     </Select>
-                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                        <SelectTrigger className="h-11 dark:bg-gray-800">
-                            <SelectValue placeholder="Filter berdasarkan kategori" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {categories.map(cat => <SelectItem key={cat} value={cat}>{cat === 'all' ? 'Semua Kategori' : cat}</SelectItem>)}
-                        </SelectContent>
-                    </Select>
-                    <div className="relative">
-                        <Select value={statusFilter} onValueChange={setStatusFilter}>
-                            <SelectTrigger className="h-11 dark:bg-gray-800">
-                                <SelectValue placeholder="Filter berdasarkan status" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                <SelectItem value="all">Semua Status</SelectItem>
-                                <SelectItem value="tersedia">Tersedia</SelectItem>
-                                <SelectItem value="dipinjam">Dipinjam</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
                     <div className="relative">
                         <Select value={categoryFilter} onValueChange={setCategoryFilter}>
                             <SelectTrigger className="h-11 dark:bg-gray-800">

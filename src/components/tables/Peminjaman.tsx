@@ -77,6 +77,8 @@ export default function PeminjamanBuku() {
             return;
         }
 
+        const finalAlasan = status === "disetuju" ? null : alasan;
+
         if (status === "disetuju") {
             try {
                 const allBooks = await FetchBooks();
@@ -94,7 +96,7 @@ export default function PeminjamanBuku() {
             }
         }
 
-        const res = await updatePeminjamanStatus(id, status, alasan);
+        const res = await updatePeminjamanStatus(id, status, finalAlasan);
         console.log(res);
         if (res.success) {
             toast.success(`Peminjaman berhasil ${status === "disetuju" ? "disetujui" : status}`);

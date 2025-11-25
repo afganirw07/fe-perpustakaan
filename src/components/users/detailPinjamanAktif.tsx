@@ -19,6 +19,7 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog/dialog"
 import { createReview } from "@/lib/ulasan";
+import FetchBooks, { updateBook } from "@/lib/books";
 
 interface BorrowRequest {
     id: string;
@@ -35,6 +36,7 @@ interface BorrowRequest {
         description: string;
         author: string;
         image: string | null;
+        stock: number;
     };
 }
 
@@ -67,7 +69,7 @@ export default function DetailPeminjamanAktif({ peminjamanId }: { peminjamanId: 
             if (response.success && Array.isArray(response.data)) {
                 const detailData = response.data.find((p: BorrowRequest) => p.id === peminjamanId);
                 setPeminjaman(detailData || null);
-                console.log("======================TESSSS============================", detailData);
+                // console.log("======================TESSSS============================", detailData);
             } else {
                 toast.error("Data peminjaman tidak ditemukan.");
             }
@@ -93,12 +95,26 @@ export default function DetailPeminjamanAktif({ peminjamanId }: { peminjamanId: 
                 review_text: comment,       
             });
 
+            // Correctly update book stock
+            const allBooks = await FetchBooks();
+            const bookToUpdate = allBooks.find(b => b.id === peminjaman.book_id);
+            
+            if (bookToUpdate) {
+                const updatedStock = bookToUpdate.stock + 1;
+                await updateBook(peminjaman.book_id, { ...bookToUpdate, stock: updatedStock });
+            } else {
+                toast.error("Gagal menemukan data buku untuk memperbarui stok.");
+            }
 
             const returnRes = await updatePeminjamanStatus(peminjaman.id, "dikembalikan");
             if (returnRes.success) {
                 toast.success("Ulasan berhasil dikirim dan buku telah dikembalikan.");
+                setTimeout(() => {
+                    router.back();
+                }, 2000);
                 setIsModalOpen(false);
-                router.refresh();            } else {
+                router.refresh();
+            } else {
                 toast.error("Gagal mengembalikan buku setelah mengirim ulasan.");
             }
         } catch (error) {
@@ -134,7 +150,7 @@ export default function DetailPeminjamanAktif({ peminjamanId }: { peminjamanId: 
                         src={peminjaman.books?.image || "/default-book.png"}
                         alt={peminjaman.books?.title || "Buku"}
                         className="w-36 h-auto object-cover rounded-md shadow-lg border"
-                    />
+                    /> 
 
                     <div className="flex-1">
                         <p className="text-2xl font-bold text-gray-900">{peminjaman.books.title}</p>

@@ -16,7 +16,7 @@ export default function CreateBookForm() {
   const [isbn, setIsbn] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState(""); 
+  const [image, setImage] = useState("");
   const [stock, setStock] = useState("");
   const [totalPages, setTotalPages] = useState("");
   const [language, setLanguage] = useState("");
@@ -49,7 +49,11 @@ export default function CreateBookForm() {
       };
       await createBook(bookData);
       toast.success("Buku berhasil dibuat!");
-      router.refresh();
+      setTimeout(() => {
+
+        window.location.reload();
+      }, 2000);
+
       // Reset form
       setTitle("");
       setAuthor("");
