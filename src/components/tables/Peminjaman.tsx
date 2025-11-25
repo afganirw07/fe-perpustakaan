@@ -17,6 +17,8 @@ import { updatePeminjamanStatus } from "@/lib/peminjaman";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select/select";
+import { updateBook } from "@/lib/books";
+import FetchBooks from "@/lib/books";
 import {
     Dialog,
     DialogContent,
@@ -63,10 +65,33 @@ export default function PeminjamanBuku() {
 
     const handleStatusUpdate = async (id: string, status: "disetuju" | "ditolak" | "dikembalikan", alasan?: string) => {
         if (status === "ditolak" && !alasan) {
-            // If status is ditolak and no reason is provided yet, open the dialog
             setCurrentRejectId(id);
             setIsRejectDialogOpen(true);
             return;
+        }
+
+        const p = tableData.find((item) => item.id === id);
+
+        if (!p) {
+            toast.error("Data peminjaman tidak ditemukan.");
+            return;
+        }
+
+        if (status === "disetuju") {
+            try {
+                const allBooks = await FetchBooks();
+                const book = allBooks.find((b) => b.id === p.book_id);
+
+                if (book) {
+                    // update stock
+                    const updatedStock = book.stock > 0 ? book.stock - 1 : 0; 
+                    await updateBook(book.id, { ...book, stock: updatedStock });
+                }
+            } catch (error) {
+                console.error("Failed to update book stock:", error);
+                toast.error("Gagal memperbarui stok buku.");
+                return;
+            }
         }
 
         const res = await updatePeminjamanStatus(id, status, alasan);
@@ -151,7 +176,7 @@ export default function PeminjamanBuku() {
                                         isHeader
                                         className="px-5 py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                                     >
-                                        Tanggal Kembali
+                                        Tanggal Kembali 
                                     </TableCell>
 
                                     <TableCell

@@ -36,14 +36,14 @@ const navItems: NavItem[] = [
     ], 
   },
   {
-    icon: <BookCopy  />,
-    name: "Input Data Buku",
-    path: "/admin/form-elements",
-  },
-  {
     icon: <TableIcon />,
     name: "Peminjaman",
     path: "/admin/peminjaman",
+  },
+  {
+    icon: <BookCopy  />,
+    name: "Input Data Buku",
+    path: "/admin/form-elements",
   },
   {
     icon: <CalenderIcon />,

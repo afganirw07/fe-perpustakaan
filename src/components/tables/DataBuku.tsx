@@ -50,6 +50,8 @@ export default function DataBuku() {
     const [tableData, setTableData] = useState<Book[]>([]);
     const [editingBook, setEditingBook] = useState<Book | null>(null);
     const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [bookToDelete, setBookToDelete] = useState<Book | null>(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [categoryFilter, setCategoryFilter] = useState("all");
@@ -102,16 +104,25 @@ export default function DataBuku() {
         }
     };
 
-    const deteleBook = async (id: number) => {
+    const handleDeleteClick = (book: Book) => {
+        setBookToDelete(book);
+        setIsDeleteDialogOpen(true);
+    };
+
+    const confirmDelete = async () => {
+        if (!bookToDelete) return;
         try {
-            const deletedData = await deleteBook(id);
+            const deletedData = await deleteBook(bookToDelete.id);
             if (deletedData) {
-                setTableData(tableData.filter(book => book.id !== id));
+                setTableData(tableData.filter(book => book.id !== bookToDelete.id));
                 toast.success("Buku berhasil dihapus.");
                 router.refresh();
             }
         } catch (error) {
             console.error("Gagal menghapus buku:", error);
+        } finally {
+            setIsDeleteDialogOpen(false);
+            setBookToDelete(null);
         }
     }
 
@@ -158,6 +169,28 @@ export default function DataBuku() {
                             {categories.map(cat => <SelectItem key={cat} value={cat}>{cat === 'all' ? 'Semua Kategori' : cat}</SelectItem>)}
                         </SelectContent>
                     </Select>
+                    <div className="relative">
+                        <Select value={statusFilter} onValueChange={setStatusFilter}>
+                            <SelectTrigger className="h-11 dark:bg-gray-800">
+                                <SelectValue placeholder="Filter berdasarkan status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                <SelectItem value="all">Semua Status</SelectItem>
+                                <SelectItem value="tersedia">Tersedia</SelectItem>
+                                <SelectItem value="dipinjam">Dipinjam</SelectItem>
+                            </SelectContent>
+                        </Select>
+                    </div>
+                    <div className="relative">
+                        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                            <SelectTrigger className="h-11 dark:bg-gray-800">
+                                <SelectValue placeholder="Filter berdasarkan kategori" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {categories.map(cat => <SelectItem key={cat} value={cat}>{cat === 'all' ? 'Semua Kategori' : cat}</SelectItem>)}
+                            </SelectContent>
+                        </Select>
+                    </div>
                     <Button variant="outline" onClick={() => { setSearchTerm(""); setStatusFilter("all"); setCategoryFilter("all"); }} className="h-11 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"><X className="mr-2 h-4 w-4" /> Reset Filter</Button>
                 </div>
             </div>
@@ -244,7 +277,7 @@ export default function DataBuku() {
                                     </TableCell>
                                     <TableCell key={`${book.id}-action`} className="px-4 py-3 text-gray-500 text-theme-sm dark:text-gray-400 flex gap-2">
                                         <Button variant="outline" size="icon" className="h-8 w-8 bg-blue-600 hover:bg-blue-700 text-white" onClick={() => handleEditClick(book)}><Edit className="h-4 w-4" /></Button>
-                                        <Button variant="outline" size="icon" onClick={() => deteleBook(book.id)} className="h-8 w-8 bg-red-600 hover:bg-red-700 text-white" ><Trash2 className="h-4 w-4" /></Button>
+                                        <Button variant="outline" size="icon" onClick={() => handleDeleteClick(book)} className="h-8 w-8 bg-red-600 hover:bg-red-700 text-white" ><Trash2 className="h-4 w-4" /></Button>
                                     </TableCell>
                                 </TableRow>
                             )) : (
@@ -326,6 +359,22 @@ export default function DataBuku() {
                         <DialogFooter className="border-t pt-4">
                             <Button onClick={() => setIsEditDialogOpen(false)} variant="outline">Batal</Button>
                             <Button onClick={handleSave} className="bg-blue-600 hover:bg-blue-700 text-white">Simpan Perubahan</Button>
+                        </DialogFooter>
+                    </DialogContent>
+                </Dialog>
+            )}
+            {bookToDelete && (
+                <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                    <DialogContent className="sm:max-w-md bg-white dark:bg-gray-900">
+                        <DialogHeader>
+                            <DialogTitle>Konfirmasi Hapus Buku</DialogTitle>
+                        </DialogHeader>
+                        <div className="py-4">
+                            <p>Apakah Anda yakin ingin menghapus buku berjudul <span className="font-semibold">{bookToDelete.title}</span>?</p>
+                        </div>
+                        <DialogFooter>
+                            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>Tidak</Button>
+                            <Button onClick={confirmDelete} className="bg-red-600 hover:bg-red-700 text-white">Ya</Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
