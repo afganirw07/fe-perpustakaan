@@ -62,7 +62,6 @@ export default function PeminjamanBuku() {
     }, []);
 
     const handleStatusUpdate = async (id: string, status: "disetuju" | "ditolak" | "dikembalikan", alasan?: string) => {
-        let res;
         if (status === "ditolak" && !alasan) {
             // If status is ditolak and no reason is provided yet, open the dialog
             setCurrentRejectId(id);
@@ -70,7 +69,7 @@ export default function PeminjamanBuku() {
             return;
         }
 
-        res = await updatePeminjamanStatus(id, status, alasan);
+        const res = await updatePeminjamanStatus(id, status, alasan);
         console.log(res);
         if (res.success) {
             toast.success(`Peminjaman berhasil ${status === "disetuju" ? "disetujui" : status}`);
