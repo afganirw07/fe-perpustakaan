@@ -49,3 +49,29 @@ export default async function editUsers(user_id: string, name: string, email: st
         ,
     });
 }
+
+
+export async function deleteUser(user_id: string) {
+    return apiFetch(`/api/users/${user_id}`, {
+        method: "DELETE",
+    });
+}
+
+export async function editUserByAdmin(data: {
+    user_id: string;
+    full_name: string;
+    email: string;
+    role_user: string;
+}) {
+    return apiFetch(`/api/users/${data.user_id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            full_name: data.full_name,
+            email: data.email,
+            role_user: data.role_user,
+        }),
+    });
+}
